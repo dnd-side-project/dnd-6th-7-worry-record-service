@@ -1,0 +1,7 @@
+aws:
+  secretsmanager:
+    name: worry-record
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2

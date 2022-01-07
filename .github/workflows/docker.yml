@@ -1,8 +1,8 @@
-name: Build and Push Docker Image
+name: Build and Push Docker Image # Repository name
 on:
   push:
     branches:
-      - main
+      - main # push branch name
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
@@ -86,8 +86,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: docker
-          environment_name: Docker-env
+          application_name: worry-record-service-eb
+          environment_name: Worryrecordserviceeb-env
           version_label: earth-docker-${{steps.current-time.outputs.formattedTime}}
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
