@@ -24,8 +24,6 @@
 
 ## 📋 컨벤션
 
-<br>
-
 #### # 브랜치 관리 전략
 
 ​	**⚙️ git-flow**
@@ -99,8 +97,6 @@ Type : 제목 #이슈번호
 <br>
 
 ## 🗺️아키텍처
-
-<br>
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/84304802/148572626-0df37efb-4d56-427b-a57c-e8b044d3c727.png" alt="아키텍처">
