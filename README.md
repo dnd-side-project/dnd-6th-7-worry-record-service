@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/badge/status-developing-orange)](https://github.com/Pgmjun/Parking-Service)
+[![Build Status](https://img.shields.io/badge/status-developing-orange)](https://github.com/dnd-side-project/dnd-6th-7-worry-record-service)
 ![License](https://img.shields.io/apm/l/vim-mode?color=yellowgreen)
 
 <br>
