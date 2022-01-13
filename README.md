@@ -123,7 +123,7 @@ Type : 제목 #이슈번호
 #### 🖥️ 프론트엔드 
 
 - 김상초 [Github](https://github.com/SangchoKim)
-- 신유림
+- 신유림 [Github](https://github.com/NONE-31D)
 
 #### 🗄️ 백엔드 
 
