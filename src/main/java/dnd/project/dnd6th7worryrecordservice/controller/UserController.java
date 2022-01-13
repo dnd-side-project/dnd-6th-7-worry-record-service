@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RequiredArgsConstructor
@@ -22,14 +23,14 @@ public class UserController {
 
 
     @PostMapping("register")
-    public void addUser(@ModelAttribute UserRequestDto userRequestDto) throws IOException {
+    public void addUser(@ModelAttribute UserRequestDto userRequestDto, HttpServletResponse response) throws IOException {
         String imgUrl = s3Uploader.uploadFile(userRequestDto.getImg(), "userImage");
         System.out.println("imgUrl = " + imgUrl);
         if (imgUrl == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "업로드된 파일이 없거나 잘못된 파일입니다.");
         } else {
+            response.setStatus(HttpServletResponse.SC_OK);
             userService.join(userRequestDto, imgUrl);
-            throw new ResponseStatusException(HttpStatus.OK, "파일 업로드 완료.");
         }
     }
 
