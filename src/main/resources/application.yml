@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   datasource:
     url: jdbc:h2:tcp://localhost/~/test
     username: sa
@@ -6,6 +8,8 @@ spring:
     driver-class-name: org.h2.Driver
     hikari:
       maximum-pool-size: 30
+
+
 
   jpa:
 #        show-sql: true
@@ -40,11 +44,14 @@ cloud:
   aws:
     credentials:
       use-default-aws-credentials-chain: true
-      accessKey: AKIAS5MSEJDE2ZZPTW6G
-      secretKey: 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
+      accessKey: AKIAWVYS3YAB4RDBG32Y
+      secretKey: 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
     s3:
-      bucket: worry-record
+      bucket: worryrecord
     region:
       static: ap-northeast-2
     stack:
       auto: false
+
+
+
