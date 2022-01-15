@@ -1,42 +1,45 @@
 package dnd.project.dnd6th7worryrecordservice.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
-
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@Configuration
-@EnableSwagger2
-public class SwaggerConfig {
+//http://localhost:8080/swagger-ui.html#
 
-    private static final String API_NAME = "Worry-Record-Service API";
+@Configuration
+@EnableAsync
+@EnableWebMvc
+@EnableSwagger2
+public class SwaggerConfig implements WebMvcConfigurer {
+    private static final String API_NAME = "ParkingService API";
     private static final String API_VERSION = "0.0.1";
-    private static final String API_DESCRIPTION = "걱정기록 서비스 API 명세서";
+    private static final String API_DESCRIPTION = "ParkingService API 명세서";
+
+    @Override public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/"); }
 
     @Bean
-    public Docket api() {
+    public Docket swagger() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("dnd.project.dnd6th7worryrecordservice")) //Swagger를 적용할 클래스의 package 명 입력.
-                .paths(PathSelectors.any()) //해당 package 하위에 있는 모든 url에 적용.
-                .build();
-    }
+                .apis(RequestHandlerSelectors.basePackage("dnd.project.dnd6th7worryrecordservice"))
+                .paths(PathSelectors.any())
+                .build(); }
 
-    //API 이름, 버전, 정보 입력하여 building
     public ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title(API_NAME)
@@ -44,4 +47,5 @@ public class SwaggerConfig {
                 .description(API_DESCRIPTION)
                 .build();
     }
+
 }
