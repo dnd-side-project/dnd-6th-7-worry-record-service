@@ -3,6 +3,7 @@ package dnd.project.dnd6th7worryrecordservice.controller;
 import dnd.project.dnd6th7worryrecordservice.aws.S3Uploader;
 import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
 import dnd.project.dnd6th7worryrecordservice.service.UserServiceImpl;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,7 +23,9 @@ public class UserController {
     private final S3Uploader s3Uploader;
 
 
+
     @PostMapping("register")
+    @ApiOperation(value = "유저 회원가입", notes = "유저를 등록한다.")
     public void addUser(@ModelAttribute UserRequestDto userRequestDto, HttpServletResponse response) throws IOException {
         String imgUrl = s3Uploader.uploadFile(userRequestDto.getImg(), "userImage");
         System.out.println("imgUrl = " + imgUrl);
