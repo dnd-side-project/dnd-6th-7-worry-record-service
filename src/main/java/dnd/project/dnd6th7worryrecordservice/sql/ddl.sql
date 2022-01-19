@@ -7,3 +7,7 @@ kakaoId varchar(100)  NOT NULL,
 imgUrl varchar(100)  NOT NULL,
 primary key(userId)
 );
+
+create table USER_AUTH(
+userId
+)

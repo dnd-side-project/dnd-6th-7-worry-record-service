@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/badge/status-developing-orange)](https://github.com/Pgmjun/Parking-Service)
+[![Build Status](https://img.shields.io/badge/status-developing-orange)](https://github.com/dnd-side-project/dnd-6th-7-worry-record-service)
 ![License](https://img.shields.io/apm/l/vim-mode?color=yellowgreen)
 
 <br>
@@ -123,7 +123,7 @@ Type : 제목 #이슈번호
 #### 🖥️ 프론트엔드 
 
 - 김상초 [Github](https://github.com/SangchoKim)
-- 신유림
+- 신유림 [Github](https://github.com/NONE-31D)
 
 #### 🗄️ 백엔드 
 

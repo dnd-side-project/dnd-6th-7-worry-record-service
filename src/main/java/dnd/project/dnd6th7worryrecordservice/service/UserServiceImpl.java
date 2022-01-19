@@ -19,27 +19,11 @@ public class UserServiceImpl {
     @Autowired
     private UserRepository userRepository;
 
-    public void join(UserRequestDto userRequestDto, String imgUrl) {
-        try {
-            User user = new User(userRequestDto.getUsername(), userRequestDto.getEmail(), userRequestDto.getKakaoId(), Role.USER, imgUrl);
+    public void join(UserRequestDto userRequestDto) {
+        User user = userRequestDto.toEntity();  //기본 Role = ROLE.USER
+        userRepository.save(user);
 
-            userRepository.save(user);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Optional<User> findByUserId(Long userId) {
-        Optional<User> User = userRepository.findByUserId(userId);
-        return User;
     }
 
 
-//    private void validateDuplicateMember(User user){
-//        userRepository.findByName(member.getName())
-//                .ifPresent(m -> {
-//                    throw new IllegalStateException("이미 존재하는 회원입니다.");
-//                });
-//    }
 }
