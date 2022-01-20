@@ -4,14 +4,18 @@ package dnd.project.dnd6th7worryrecordservice.kakao;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 
+@RequiredArgsConstructor
 @Service
 public class KakaoService {
 
@@ -31,7 +35,7 @@ public class KakaoService {
     private String clientSecret;
 
     //accessToken 받기
-    public String getAccessToken (String authorize_code) {
+/*    public String getAccessToken (String authorize_code) {
         String access_Token = "";
         String refresh_Token = "";
 
@@ -86,7 +90,7 @@ public class KakaoService {
         }
 
         return access_Token;
-    }
+    }*/
 
     //AccessToken으로 UserInfo 받기
     public HashMap<String, String> getUserInfo (String access_Token) {
@@ -135,6 +139,7 @@ public class KakaoService {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            return null;
         }
 
         return userInfo;

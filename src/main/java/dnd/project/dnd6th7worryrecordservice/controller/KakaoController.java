@@ -1,46 +1,70 @@
 package dnd.project.dnd6th7worryrecordservice.controller;
 
+import dnd.project.dnd6th7worryrecordservice.domain.user.User;
 import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.UserResponseDto;
+import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import dnd.project.dnd6th7worryrecordservice.jwt.JwtTokenProvider;
 import dnd.project.dnd6th7worryrecordservice.kakao.KakaoService;
 import dnd.project.dnd6th7worryrecordservice.service.UserServiceImpl;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
+import io.jsonwebtoken.lang.Assert;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.Optional;
 
 @RequiredArgsConstructor
-@RequestMapping("user")
+@RequestMapping("auth")
 @RestController
 public class KakaoController {
     private final JwtTokenProvider jwtTokenProvider;
     private final KakaoService kakaoService;
     private final UserServiceImpl userService;
 
-    @ApiOperation(value = "토큰 발급", notes = "JWT AccessToken, RefreshToken 을 발급한다")
-    @PostMapping(value = "/registry")
-    public ResponseEntity<UserResponseDto> getUserInfo(@RequestParam("token") String accessToken, HttpSession session) {
 
-        System.out.println("accessToken = " + accessToken);
+    @ApiOperation(value = "토큰 발급", notes = "JWT AccessToken, RefreshToken 을 발급한다")
+    @PostMapping(value = "/login")
+    public ResponseEntity<UserResponseDto> getUserInfo(@RequestParam("token") String accessToken, HttpServletResponse res) {
 
         HashMap<String, String> userInfo = kakaoService.getUserInfo(accessToken);   //accessToken으로 유저정보 받아오기
+        if(userInfo == null){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
 
         UserRequestDto userRequestDto = new UserRequestDto(userInfo.get(0), userInfo.get(1), userInfo.get(2), userInfo.get(3));
-        userService.join(userRequestDto);
+        UserResponseDto userResponseDto = new UserResponseDto(userInfo.get(0), userInfo.get(1), userInfo.get(3));
 
-        String token = jwtTokenProvider.createToken(userRequestDto.getUsername(), userRequestDto.getEmail(), userRequestDto.getImgURL());
-        String refreshToken = jwtTokenProvider.createRefreshToken(userRequestDto.getUsername(), userRequestDto.getEmail());
+        DuplicateCheck(userInfo.get(2), userRequestDto);
 
-        UserResponseDto userResponseDto = new UserResponseDto(token, refreshToken);
+        TokenDto tokens = jwtTokenProvider.createToken(userRequestDto);
 
-        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+        res.addHeader("at-jwt-access-token",tokens.getJwtAccessToken());
+        res.addHeader("at-jwt-refresh-token", tokens.getJwtRefreshToken());
+
+        return ResponseEntity.ok(userResponseDto);
+    }
+
+
+
+
+    //kakaoId로 중복 회원 체크
+    private void DuplicateCheck(String kakaoId, UserRequestDto userRequestDto) {
+        try{
+            Optional<User> userByKakaoId = userService.findUserByKakaoId(kakaoId);
+            Assert.notNull(userByKakaoId);
+            userService.join(userRequestDto);
+        }
+        catch (NullPointerException e){
+            System.out.println("이미 등록된 회원입니다.");    //printStackTrace 사용하려 했는데 보안 상 문제가 있다고 하여 sout사용
+        }
     }
 }
 
