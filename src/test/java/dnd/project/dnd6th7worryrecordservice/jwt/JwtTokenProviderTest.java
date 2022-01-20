@@ -1,5 +1,8 @@
 package dnd.project.dnd6th7worryrecordservice.jwt;
 
+import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
+import dnd.project.dnd6th7worryrecordservice.dto.UserResponseDto;
+import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,9 +18,12 @@ class JwtTokenProviderTest {
 
     @Test
     public void TokenCreateTest(){
-        String token = jwtTokenProvider.createToken("username", "abbc@naver.com", "awdlawdnkawndlknflakwf.com");
+        UserRequestDto userRequestDto = new UserRequestDto("username", "abbc@naver.com", "1231234","awdlawdnkawndlknflakwf.com");
 
-        System.out.println("token = " + token);
+        TokenDto tokens = jwtTokenProvider.createToken(userRequestDto);
+
+        System.out.println("tokens.getJwtAccessToken = " + tokens.getJwtAccessToken());
+        System.out.println("tokens.getJwtRefreshToken = " + tokens.getJwtRefreshToken());
     }
 
 }
