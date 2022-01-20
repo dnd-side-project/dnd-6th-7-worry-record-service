@@ -25,5 +25,10 @@ public class UserServiceImpl {
 
     }
 
+    public Optional<User> findUserByKakaoId(String kakaoId){
+        Optional<User> user = userRepository.findByKakaoId(kakaoId);
+        return user;
+    }
+
 
 }
