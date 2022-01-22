@@ -5,6 +5,7 @@ email varchar(100) ,
 role varchar(100)  NOT NULL,
 kakaoId varchar(100)  NOT NULL,
 imgUrl varchar(100)  NOT NULL,
+refreshToken varchar(1000)
 primary key(userId)
 );
 
