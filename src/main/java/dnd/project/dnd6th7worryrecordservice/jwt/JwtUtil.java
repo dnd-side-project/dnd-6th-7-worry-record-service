@@ -15,18 +15,20 @@ import java.util.Map;
 
 import static org.springframework.security.config.Elements.JWT;
 import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
+import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS512;
 
-public class JwtTokenProvider {
+public class JwtUtil {
     private SecretKey key;
     private Date now = new Date();
     private int accessTokenExpMin = 1800;   //30min
     private int refreshTokenExpMin = 604800;    //7day
 
-    public JwtTokenProvider(String secret){
+    public JwtUtil(String secret){
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public TokenDto createToken(UserRequestDto userRequestDto) {
+
         String accessToken = createJws(accessTokenExpMin, userRequestDto);
         String refreshToken = createJws(refreshTokenExpMin, null);
 

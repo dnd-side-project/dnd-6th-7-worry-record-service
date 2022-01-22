@@ -1,6 +1,6 @@
 package dnd.project.dnd6th7worryrecordservice.config;
 
-import dnd.project.dnd6th7worryrecordservice.jwt.JwtTokenProvider;
+import dnd.project.dnd6th7worryrecordservice.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JwtTokenProvider jwtTokenProvider(){
-        return new JwtTokenProvider(secret);
+    public JwtUtil jwtUtil(){
+        return new JwtUtil(secret);
     }
 }

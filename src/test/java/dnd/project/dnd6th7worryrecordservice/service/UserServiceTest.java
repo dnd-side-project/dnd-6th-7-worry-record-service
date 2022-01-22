@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @WebAppConfiguration
 @SpringBootTest
-class UserServiceImplTest {
+class UserServiceTest {
 
     @Test
     public void requestDtoToEntityTest(){
