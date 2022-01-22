@@ -1,9 +1,10 @@
-package dnd.project.dnd6th7worryrecordservice.kakao;
+package dnd.project.dnd6th7worryrecordservice.service;
 
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -93,10 +94,11 @@ public class KakaoService {
     }*/
 
     //AccessToken으로 UserInfo 받기
-    public HashMap<String, String> getUserInfo (String access_Token) {
+    public UserRequestDto getUserInfo(String access_Token) {
 
-        //    요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
-        HashMap<String, String> userInfo = new HashMap<>();
+        //UserRequestDto에 정보 받기
+        UserRequestDto userInfo = new UserRequestDto();
+
         try {
             URL url = new URL(userInfoURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -130,10 +132,11 @@ public class KakaoService {
             String imgURL = properties.getAsJsonObject().get("profile_image").getAsString();
             String email = kakao_account.getAsJsonObject().get("email").getAsString();
 
-            userInfo.put("nickname", nickname);
-            userInfo.put("email", email);
-            userInfo.put("kakaoId", kakaoId);
-            userInfo.put("imgUrl", imgURL);
+            //    UserRequestDto에 값 주입
+            userInfo.setUsername(nickname);
+            userInfo.setKakaoId(kakaoId);
+            userInfo.setEmail(email);
+            userInfo.setImgURL(imgURL);
 
 
         } catch (IOException e) {
