@@ -1,6 +1,5 @@
 package dnd.project.dnd6th7worryrecordservice.jwt;
 
-import dnd.project.dnd6th7worryrecordservice.config.SecurityConfig;
 import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,9 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.crypto.SecretKey;
@@ -63,6 +59,17 @@ class JwtUtilTest {
 
         jwtUtil.validate(tokens.getJwtAccessToken());
 
+    }
+
+    @Test
+    @DisplayName("decode 테스트")
+    public void decodeTest(){
+        UserRequestDto userRequestDto = new UserRequestDto("username", "abbc@naver.com", "1231234","awdlawdnkawndlknflakwf.com");
+        TokenDto tokens = jwtUtil.createToken(userRequestDto);
+
+        String decode = jwtUtil.decodePayload(tokens.getJwtAccessToken());
+
+        System.out.println("decode = " + decode);
     }
 
 }
