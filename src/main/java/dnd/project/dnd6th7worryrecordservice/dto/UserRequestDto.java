@@ -25,7 +25,7 @@ public class UserRequestDto {
         this.refreshToken = refreshToken;
     }
 
-    //테스트용
+
     public UserRequestDto(String username, String email, String kakaoId, String imgURL) {
         this.username = username;
         this.email = email;

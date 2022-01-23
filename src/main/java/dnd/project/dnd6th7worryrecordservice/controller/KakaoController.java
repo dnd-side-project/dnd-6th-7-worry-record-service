@@ -33,7 +33,7 @@ public class KakaoController {
 
             TokenDto tokens = jwtUtil.createToken(userInfo);
             userInfo.setRefreshToken(tokens.getJwtRefreshToken());
-
+            //kakaoId 기준으로 User 데이터가 없으면 Insert, 있으면 Update
             userService.insertOrUpdateUser(userInfo);
 
             res.addHeader("at-jwt-access-token",tokens.getJwtAccessToken());

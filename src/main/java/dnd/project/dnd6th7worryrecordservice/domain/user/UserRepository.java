@@ -21,5 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User u SET u.username = ?1, u.email = ?2, u.imgUrl = ?3, u.refreshToken = ?4 WHERE u.kakaoId = ?5")
     void updateUserByKakaoId(String username, String email, String imgURL, String refreshToken, String kakaoId);
 
+    @Query("SELECT u.refreshToken FROM User u WHERE u.kakaoId = ?1")
+    String findRefreshTokenByKakaoId(String kakaoId);
+
 }
 

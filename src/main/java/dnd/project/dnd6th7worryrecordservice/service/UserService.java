@@ -21,14 +21,11 @@ public class UserService {
 
     public void insertOrUpdateUser(UserRequestDto userRequestDto) {
         String kakaoId = userRequestDto.getKakaoId();
-        System.out.println("kakaoId = " + kakaoId);
         //처음 로그인 하는 유저면 DB에 insert
         if(!findUserByKakaoId(kakaoId).isPresent()){
-            System.out.println("insert");
             User user = userRequestDto.toEntity();  //기본 Role = ROLE.USER
             userRepository.save(user);
         }else{ //이미 로그인 했던 유저라면 DB update
-            System.out.println("update");
             updateUserByKakaoId(userRequestDto);
         }
     }
@@ -40,6 +37,10 @@ public class UserService {
 
     public void updateUserByKakaoId(UserRequestDto userInfo){
         userRepository.updateUserByKakaoId(userInfo.getUsername(), userInfo.getEmail(), userInfo.getImgURL(), userInfo.getRefreshToken(), userInfo.getKakaoId());
+    }
+
+    public String findRefreshTokenByKakaoId(String kakaoId){
+        return userRepository.findRefreshTokenByKakaoId(kakaoId);
     }
 
 
