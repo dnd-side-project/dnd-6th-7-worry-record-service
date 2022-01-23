@@ -1,21 +1,19 @@
 package dnd.project.dnd6th7worryrecordservice.jwt;
 
 import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
-import dnd.project.dnd6th7worryrecordservice.dto.UserResponseDto;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.security.config.Elements.JWT;
 import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
-import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS512;
 
 public class JwtUtil {
     private SecretKey key;
@@ -23,7 +21,7 @@ public class JwtUtil {
     private int accessTokenExpMin = 1800;   //30min
     private int refreshTokenExpMin = 604800;    //7day
 
-    public JwtUtil(String secret){
+    public JwtUtil(String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
@@ -32,7 +30,7 @@ public class JwtUtil {
         String accessToken = createJws(accessTokenExpMin, userRequestDto);
         String refreshToken = createJws(refreshTokenExpMin, null);
 
-        TokenDto tokens = new TokenDto(accessToken,refreshToken);
+        TokenDto tokens = new TokenDto(accessToken, refreshToken);
 
         return tokens;
     }
@@ -50,7 +48,8 @@ public class JwtUtil {
         claims.put("iss", "worryrecord");
         claims.put("issueAt", now);
         claims.put("exp", new Date(System.currentTimeMillis() + 1000 * 60 * expMin));
-        if(userRequestDto != null) {
+        if (userRequestDto != null) {
+            claims.put("kakaoId", userRequestDto.getKakaoId());
             claims.put("username", userRequestDto.getUsername());
             claims.put("email", userRequestDto.getEmail());
             claims.put("imgURL", userRequestDto.getImgURL());
@@ -71,7 +70,6 @@ public class JwtUtil {
 
         Jws<Claims> jws;
 
-
         try {   //유효한 Token일 경우 decode된 내용을 출력
             JwtParserBuilder jpb = Jwts.parserBuilder();
             jpb.setSigningKey(key);
@@ -81,9 +79,25 @@ public class JwtUtil {
             System.out.println(jws.getBody().getSubject());
 
             return true;
-        }catch(JwtException e) {
+        } catch (JwtException e) {
             return false;   //유효하지 않은 Token일 경우 응답으로 false를 return
         }
+    }
+
+    public String decodePayload(String token) {
+
+        String[] splitToken = token.split("\\.");
+        Base64.Decoder decoder = Base64.getDecoder();
+        byte[] decodedBytes = decoder.decode(splitToken[1]);
+
+        String decodedString = null;
+        try {
+            decodedString = new String(decodedBytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return decodedString;
 
     }
+
 }

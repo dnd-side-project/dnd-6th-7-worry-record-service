@@ -2,6 +2,8 @@ package dnd.project.dnd6th7worryrecordservice.config;
 
 import dnd.project.dnd6th7worryrecordservice.jwt.JwtInterceptor;
 import dnd.project.dnd6th7worryrecordservice.jwt.JwtUtil;
+import dnd.project.dnd6th7worryrecordservice.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -10,13 +12,15 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+@RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    private final UserService userService;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         System.out.println("####### Register Interceptor: JwtInterceptor!!!");
-        registry.addInterceptor(jwtInterceptor()).addPathPatterns("/qss/**");   //토큰을 검증할 path
+        registry.addInterceptor(jwtInterceptor()).addPathPatterns("/auth/validTest");   //토큰을 검증할 path
     }
 
     @Override
@@ -28,5 +32,5 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public JwtInterceptor jwtInterceptor() {
-        return new JwtInterceptor(); }
+        return new JwtInterceptor(userService); }
 }
