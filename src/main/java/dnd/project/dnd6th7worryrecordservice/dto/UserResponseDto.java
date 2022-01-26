@@ -1,11 +1,15 @@
 package dnd.project.dnd6th7worryrecordservice.dto;
 
-public class UserResponseDto {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-    private Long userId;
+@Setter
+@Getter
+@AllArgsConstructor
+public class UserResponseDto {
     private String username;
     private String email;
-    private String role;
-    private String kakaoId;
-    private String imgUrl;
+    private String imgURL;
+
 }
