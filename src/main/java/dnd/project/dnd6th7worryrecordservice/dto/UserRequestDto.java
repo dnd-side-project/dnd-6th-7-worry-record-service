@@ -33,6 +33,7 @@ public class UserRequestDto {
         this.imgURL = imgURL;
     }
 
+    //UserRequestDto를 User Entity로 변환하여 return
     public User toEntity(){
         User user = new User(this.username, this.email, this.kakaoId, Role.USER, this.imgURL, this.refreshToken);
         return user;

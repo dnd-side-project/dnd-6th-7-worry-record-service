@@ -139,10 +139,10 @@ public class KakaoService {
             userInfo.setImgURL(imgURL);
 
 
-        } catch (IOException e) {
+        } catch (IOException e) {   // 잘못된 값 주입하고 에러 터지는 지 Test
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return null;
+            return null;    //글로벌 에러 처리할 때 변경
         }
 
         return userInfo;
