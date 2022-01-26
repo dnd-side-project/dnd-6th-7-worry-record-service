@@ -1,6 +1,5 @@
 package dnd.project.dnd6th7worryrecordservice.service;
 
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -8,13 +7,11 @@ import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 
 @RequiredArgsConstructor
 @Service
@@ -139,10 +136,10 @@ public class KakaoService {
             userInfo.setImgURL(imgURL);
 
 
-        } catch (IOException e) {
+        } catch (IOException e) {   // 잘못된 값 주입하고 에러 터지는 지 Test
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return null;
+            return null;    //글로벌 에러 처리할 때 변경
         }
 
         return userInfo;

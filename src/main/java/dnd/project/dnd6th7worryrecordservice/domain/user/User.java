@@ -1,9 +1,7 @@
 package dnd.project.dnd6th7worryrecordservice.domain.user;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 
 import javax.persistence.*;
 
