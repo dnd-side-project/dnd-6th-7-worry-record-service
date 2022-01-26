@@ -1,11 +1,8 @@
 package dnd.project.dnd6th7worryrecordservice.config;
 
 import dnd.project.dnd6th7worryrecordservice.jwt.JwtInterceptor;
-import dnd.project.dnd6th7worryrecordservice.jwt.JwtUtil;
 import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -32,5 +29,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public JwtInterceptor jwtInterceptor() {
-        return new JwtInterceptor(userService); }
+        return new JwtInterceptor(userService);
+    }
 }

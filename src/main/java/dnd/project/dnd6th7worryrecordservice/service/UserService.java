@@ -1,34 +1,30 @@
 package dnd.project.dnd6th7worryrecordservice.service;
 
-import dnd.project.dnd6th7worryrecordservice.domain.user.Role;
 import dnd.project.dnd6th7worryrecordservice.domain.user.User;
-import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
 import dnd.project.dnd6th7worryrecordservice.domain.user.UserRepository;
+import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Transactional
-@Component
+@Service
 @RequiredArgsConstructor
 public class UserService {
-
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public void insertOrUpdateUser(UserRequestDto userRequestDto) {
         String kakaoId = userRequestDto.getKakaoId();
         //처음 로그인 하는 유저면 DB에 insert
         if(!findUserByKakaoId(kakaoId).isPresent()){
-            User user = userRequestDto.toEntity();  //기본 Role = ROLE.USER
+            User user = userRequestDto.toEntity(); //기본 Role = ROLE.USER
             userRepository.save(user);
         }else{ //이미 로그인 했던 유저라면 DB update
             updateUserByKakaoId(userRequestDto);
         }
     }
+
 
     public Optional<User> findUserByKakaoId(String kakaoId){
         Optional<User> user = userRepository.findByKakaoId(kakaoId);
