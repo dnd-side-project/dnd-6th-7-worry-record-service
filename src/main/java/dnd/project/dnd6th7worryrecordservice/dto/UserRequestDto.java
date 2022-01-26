@@ -5,7 +5,6 @@ import dnd.project.dnd6th7worryrecordservice.domain.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
