@@ -9,6 +9,7 @@
   <img width="350" height="250" src="https://user-images.githubusercontent.com/84304802/148551487-d1f77a1c-78ae-4bae-89d1-86c03fd6b64e.jpg" alt="이미지 준비중">
 </p>
 
+
 <이미지 준비중>
 
 
@@ -31,6 +32,7 @@
 <p align="center">
   <img src="https://user-images.githubusercontent.com/84304802/148559145-64a8029e-d220-4b80-b02f-eb45a0e07c05.png" alt="git-flow">
 </p>
+
 
 <br>
 
@@ -103,14 +105,29 @@ Type : 제목 #이슈번호
   <img src="https://user-images.githubusercontent.com/84304802/148572626-0df37efb-4d56-427b-a57c-e8b044d3c727.png" alt="아키텍처">
 </p>
 
+<br>
 
-
-
-
+<br>
 
 ## ⚒️ 기술 스택
 
 <br>
+
+⚙️ **Language**
+
+Java 1.8
+
+⚙️ **Framework**
+
+Spring boot / Spring Data Jpa / Junit5 / Docker / Swagger
+
+⚙️ **AWS**
+
+RDS / EB / SecretManager / ECR
+
+⚙️ **DB**
+
+H2DB, MySQL
 
 <br>
 
