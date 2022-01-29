@@ -39,5 +39,13 @@ public class UserService {
         return userRepository.findRefreshTokenByKakaoId(kakaoId);
     }
 
+    public void deleteUserByKakaoId(String kakaoId){
+        Optional<User> user = userRepository.findByKakaoId(kakaoId);
+        if(user.isPresent())
+            userRepository.delete(user.get());
+        else
+            throw new NullPointerException();
+    }
+
 
 }

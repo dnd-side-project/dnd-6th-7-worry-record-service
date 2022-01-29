@@ -25,7 +25,7 @@ public class KakaoController {
 
     @ApiOperation(value = "토큰 발급", notes = "JWT AccessToken, RefreshToken 을 발급한다")
     @PostMapping(value = "/login")
-    public ResponseEntity<UserResponseDto> tokenVerify(@RequestParam("token") String accessToken, HttpServletResponse res) {
+    public ResponseEntity<UserResponseDto> giveToken(@RequestParam("token") String accessToken, HttpServletResponse res) {
 
         UserRequestDto userInfo = kakaoService.getUserInfo(accessToken);   //accessToken으로 유저정보 받아오기
         if(userInfo.getKakaoId() != null){
@@ -69,6 +69,7 @@ public class KakaoController {
         return ResponseEntity.ok(userResponseDto);
     }
 
+    //WebConfig addInterceptors 메서드에서 토큰 검증할 path 설정 가능
     @ApiOperation(value = "토큰 검증 테스트", notes = "JWT Token 검증 테스트")
     @GetMapping(value = "/validTest")
     public ResponseEntity<?> validTest(){

@@ -5,9 +5,11 @@ import dnd.project.dnd6th7worryrecordservice.domain.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 @NoArgsConstructor
 public class UserRequestDto {
     private String username;
