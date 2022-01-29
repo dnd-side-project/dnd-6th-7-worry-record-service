@@ -21,8 +21,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import javax.transaction.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,7 +76,7 @@ public class KakaoControllerTest {
 
         TokenDto tokens = jwtUtil.createToken(userInfo);
 
-        mvc.perform(post("/auth/validTest")
+        mvc.perform(get("/auth/validTest")
                         .header("at-jwt-access-token", tokens.getJwtAccessToken()))
                 .andExpect(status().isOk()) // 호출 결과값이 OK가 나오면 정상처리
                 .andDo(print());// 결과를 print
