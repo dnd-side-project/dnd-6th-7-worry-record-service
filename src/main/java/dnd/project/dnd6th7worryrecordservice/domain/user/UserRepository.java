@@ -23,5 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u.refreshToken FROM User u WHERE u.kakaoId = ?1")
     String findRefreshTokenByKakaoId(String kakaoId);
 
+    void delete(User user);
+
 }
 
