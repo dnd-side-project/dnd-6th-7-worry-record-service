@@ -5,35 +5,27 @@ import dnd.project.dnd6th7worryrecordservice.dto.UserResponseDto;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import dnd.project.dnd6th7worryrecordservice.jwt.JwtUtil;
 import dnd.project.dnd6th7worryrecordservice.service.UserService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.util.NestedServletException;
 
-import javax.transaction.Transactional;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Transactional
-@AutoConfigureMockMvc
-@WebAppConfiguration
+
 @SpringBootTest
 public class KakaoControllerTest {
 
-    private WebApplicationContext context; // MockMvc 객체 생성을 위한 context
-    private MockMvc mvc;
+    MockMvc mvc;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -49,12 +41,6 @@ public class KakaoControllerTest {
                 .alwaysDo(print())
                 .build();
     }
-
-    @AfterEach
-    void resetDB() {
-        userService.deleteUserByKakaoId("0000");
-    }
-
 
     @Test
     @DisplayName("토큰 발급 테스트")
@@ -125,5 +111,7 @@ public class KakaoControllerTest {
                         .header("at-jwt-refresh-token", tokens.getJwtRefreshToken()))
                 .andExpect(status().isOk()) // 호출 결과값이 OK가 나오면 정상처리
                 .andDo(print());// 결과를 print
+
+        userService.deleteUserByKakaoId("0000");
     }
 }
