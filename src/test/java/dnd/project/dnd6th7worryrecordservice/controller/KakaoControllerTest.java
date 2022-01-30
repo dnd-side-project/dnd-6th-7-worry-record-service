@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.util.NestedServletException;
 
 import javax.transaction.Transactional;
 
@@ -50,7 +51,7 @@ public class KakaoControllerTest {
     }
 
     @AfterEach
-    void resetDB(){
+    void resetDB() {
         userService.deleteUserByKakaoId("0000");
     }
 
@@ -64,10 +65,32 @@ public class KakaoControllerTest {
     }
 
     @Test
-    @DisplayName("토큰 검증 테스트")
-    public void verifyTokenTest() throws Exception {
+    @DisplayName("토큰 검증 테스트 - No token")
+    public void verifyTokenTest1() throws Exception {
         String username = "testUser";
-        String kakaoId ="0000";
+        String kakaoId = "0000";
+        String email = "test@naver.com";
+        String imgURL = "test.jpg";
+
+        UserRequestDto userInfo = new UserRequestDto(username, email, kakaoId, imgURL);
+        UserResponseDto userResponseDto = new UserResponseDto(username, email, imgURL);
+
+        TokenDto tokens = jwtUtil.createToken(userInfo);
+
+        try {
+            mvc.perform(get("/auth/validTest"))
+                    .andExpect(status().isOk()) // 호출 결과값이 OK가 나오면 정상처리
+                    .andDo(print());// 결과를 print
+        } catch (NestedServletException e) {
+            System.out.println("No token");
+        }
+    }
+
+    @Test
+    @DisplayName("토큰 검증 테스트 - AccessToken")
+    public void verifyTokenTest2() throws Exception {
+        String username = "testUser";
+        String kakaoId = "0000";
         String email = "test@naver.com";
         String imgURL = "test.jpg";
 
@@ -78,6 +101,28 @@ public class KakaoControllerTest {
 
         mvc.perform(get("/auth/validTest")
                         .header("at-jwt-access-token", tokens.getJwtAccessToken()))
+                .andExpect(status().isOk()) // 호출 결과값이 OK가 나오면 정상처리
+                .andDo(print());// 결과를 print
+
+    }
+
+    @Test
+    @DisplayName("토큰 검증 테스트 - RefreshToken")
+    public void verifyTokenTest3() throws Exception {
+        String username = "testUser";
+        String kakaoId = "0000";
+        String email = "test@naver.com";
+        String imgURL = "test.jpg";
+
+        UserRequestDto userInfo = new UserRequestDto(username, email, kakaoId, imgURL);
+
+        TokenDto tokens = jwtUtil.createToken(userInfo);
+        userInfo.setRefreshToken(tokens.getJwtRefreshToken());
+        userService.insertOrUpdateUser(userInfo);
+
+        mvc.perform(get("/auth/validTest")
+                        .header("at-jwt-access-token", tokens.getJwtAccessToken())
+                        .header("at-jwt-refresh-token", tokens.getJwtRefreshToken()))
                 .andExpect(status().isOk()) // 호출 결과값이 OK가 나오면 정상처리
                 .andDo(print());// 결과를 print
     }
