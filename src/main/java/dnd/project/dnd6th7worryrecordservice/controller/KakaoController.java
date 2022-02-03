@@ -28,7 +28,7 @@ public class KakaoController {
     public ResponseEntity<UserResponseDto> giveToken(@RequestParam("token") String accessToken, HttpServletResponse res) {
 
         UserRequestDto userInfo = kakaoService.getUserInfo(accessToken);   //accessToken으로 유저정보 받아오기
-        if(userInfo.getKakaoId() != null){
+        if (userInfo.getKakaoId() != null) {
             UserResponseDto userResponseDto = new UserResponseDto(userInfo.getUsername(), userInfo.getEmail(), userInfo.getImgURL());
 
             TokenDto tokens = jwtUtil.createToken(userInfo);
@@ -36,12 +36,12 @@ public class KakaoController {
             //kakaoId 기준으로 DB select하여 User 데이터가 없으면 Insert, 있으면 Update
             userService.insertOrUpdateUser(userInfo);
 
-            res.addHeader("at-jwt-access-token",tokens.getJwtAccessToken());
+            res.addHeader("at-jwt-access-token", tokens.getJwtAccessToken());
             res.addHeader("at-jwt-refresh-token", tokens.getJwtRefreshToken());
 
 
             return ResponseEntity.ok(userResponseDto);
-        }else{
+        } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -49,9 +49,9 @@ public class KakaoController {
 
     @ApiOperation(value = "토큰 발급 테스트", notes = "JWT AccessToken, RefreshToken 발급 테스트")
     @PostMapping(value = "/test")
-    public ResponseEntity<UserResponseDto> tokenTest(HttpServletResponse res){
+    public ResponseEntity<UserResponseDto> tokenTest(HttpServletResponse res) {
         String username = "testUser";
-        String kakaoId ="1234123";
+        String kakaoId = "1234123";
         String email = "test@naver.com";
         String imgURL = "test.jpg";
 
@@ -63,7 +63,7 @@ public class KakaoController {
 
         userService.insertOrUpdateUser(userInfo);
 
-        res.addHeader("at-jwt-access-token",tokens.getJwtAccessToken());
+        res.addHeader("at-jwt-access-token", tokens.getJwtAccessToken());
         res.addHeader("at-jwt-refresh-token", tokens.getJwtRefreshToken());
 
         return ResponseEntity.ok(userResponseDto);
@@ -72,7 +72,7 @@ public class KakaoController {
     //WebConfig addInterceptors 메서드에서 토큰 검증할 path 설정 가능
     @ApiOperation(value = "토큰 검증 테스트", notes = "JWT Token 검증 테스트")
     @GetMapping(value = "/validTest")
-    public ResponseEntity<?> validTest(){
+    public ResponseEntity<?> validTest() {
 
         return new ResponseEntity<>("success", HttpStatus.OK);
     }

@@ -34,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // preflight 대응
                 .antMatchers("/auth/**").permitAll() // /auth/**에 대한 접근을 인증 절차 없이 허용(로그인 관련 url)
+                .antMatchers(HttpMethod.POST, "/login").permitAll()
                 // 특정 권한을 가진 사용자만 접근을 허용해야 할 경우, 하기 항목을 통해 가능
                 //.antMatchers("/admin/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated() // 위에서 따로 지정한 접근허용 리소스 설정 후 그 외 나머지 리소스들은 무조건 인증을 완료해야 접근 가능
@@ -50,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.accessDeniedHandler(new CustomAccessDeniedHandler())
                 .sessionManagement()    //스프링 시큐리티 session 정책
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 스프링시큐리티가 생성하지도않고 기존것을 사용하지도 않음(JWT 같은토큰방식을 쓸때 사용하는 설정)
+
     }
 
     @Bean
