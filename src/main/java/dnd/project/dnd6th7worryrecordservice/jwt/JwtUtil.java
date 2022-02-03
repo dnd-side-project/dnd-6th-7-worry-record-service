@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.springframework.security.config.Elements.JWT;
 import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
 
-public class JwtUtil {
+public class   JwtUtil {
     private SecretKey key;
     private Date now = new Date();
     private int accessTokenExpMin = 1800;   //30min
