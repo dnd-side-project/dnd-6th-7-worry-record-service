@@ -41,7 +41,7 @@ jobs:
         run: chmod +x gradlew
 
       # 6. 그래들 빌드
-      - name: Build with Gradle - x test
+      - name: Build with Gradle
         run: ./gradlew clean build
 
       # 6.5 Scheduler 한국 시간대 설정

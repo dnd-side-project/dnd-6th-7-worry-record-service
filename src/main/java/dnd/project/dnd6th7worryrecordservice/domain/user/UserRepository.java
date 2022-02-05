@@ -16,6 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByKakaoId(String kakaoId);
 
+    //update 부분 jpa 변경감지로 변환
     @Modifying(clearAutomatically = true)
     @Query("UPDATE User u SET u.username = ?1, u.email = ?2, u.imgUrl = ?3, u.refreshToken = ?4 WHERE u.kakaoId = ?5")
     void updateUserByKakaoId(String username, String email, String imgURL, String refreshToken, String kakaoId);
