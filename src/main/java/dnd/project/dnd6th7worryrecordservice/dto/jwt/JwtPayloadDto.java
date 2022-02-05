@@ -13,7 +13,7 @@ public class JwtPayloadDto {
     private String imgURL;
 
     public UserRequestDto toUserRequestDto(){
-        UserRequestDto userRequestDto = new UserRequestDto(this.username, this.email, this.getKakaoId(), this.getImgURL());
+        UserRequestDto userRequestDto = new UserRequestDto(this.username, this.email, this.kakaoId, this.imgURL);
         return userRequestDto;
     }
 }

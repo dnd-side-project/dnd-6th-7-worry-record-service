@@ -6,12 +6,11 @@ import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import dnd.project.dnd6th7worryrecordservice.jwt.JwtUtil;
 import dnd.project.dnd6th7worryrecordservice.service.KakaoService;
 import dnd.project.dnd6th7worryrecordservice.service.UserService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
@@ -22,8 +21,16 @@ public class KakaoController {
     private final KakaoService kakaoService;
     private final UserService userService;
 
-
     @ApiOperation(value = "토큰 발급", notes = "JWT AccessToken, RefreshToken 을 발급한다")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "No param")
+            //Other Http Status code..
+    })
+    @ApiImplicitParam(
+            name = "token"
+            , value = "카카오 엑세스 토큰"
+            , defaultValue = "None")
     @PostMapping(value = "/login")
     public ResponseEntity<UserResponseDto> giveToken(@RequestParam("token") String accessToken, HttpServletResponse res) {
 
@@ -39,13 +46,11 @@ public class KakaoController {
             res.addHeader("at-jwt-access-token", tokens.getJwtAccessToken());
             res.addHeader("at-jwt-refresh-token", tokens.getJwtRefreshToken());
 
-
             return ResponseEntity.ok(userResponseDto);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-
 
     @ApiOperation(value = "토큰 발급 테스트", notes = "JWT AccessToken, RefreshToken 발급 테스트")
     @PostMapping(value = "/test")
