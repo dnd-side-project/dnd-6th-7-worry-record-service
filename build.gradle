@@ -28,9 +28,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'com.google.code.gson:gson:2.8.6'
 
-    //S3
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-
     //jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
@@ -47,7 +44,6 @@ dependencies {
     // aws secrets
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.0'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'
-    implementation("com.amazonaws:aws-java-sdk-s3:1.12.52")
     implementation 'commons-io:commons-io:2.5'
 
     testImplementation 'org.springframework.security:spring-security-test'
