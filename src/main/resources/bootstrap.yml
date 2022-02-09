@@ -1,6 +1,6 @@
 aws:
   secretsmanager:
-    name: worry-record
+    name: worryrecord
 cloud:
   aws:
     region:
