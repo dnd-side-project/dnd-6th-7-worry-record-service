@@ -33,7 +33,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
           secrets: |
-            /SECRET/WORRYRECORD
+            /secret/worry
           parse-json: false
 
       # 5. 빌드 전 그래들 권한 부여
@@ -86,8 +86,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: worry-eb
-          environment_name: Worryeb-env
+          application_name: worryworry-eb
+          environment_name: Worryworryeb-env
           version_label: earth-docker-${{steps.current-time.outputs.formattedTime}}
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
