@@ -1,8 +1,8 @@
-name: Build and Push Docker Image # Repository name
+name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main # push branch name
+      - main
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
@@ -45,12 +45,12 @@ jobs:
         run: ./gradlew clean build
 
       # 6.5 Scheduler 한국 시간대 설정
-#      - name: Generate deployment package
-#        run: |
-#          mkdir -p deploy
-#          cp Dockerrun.aws.json deploy/Dockerrun.aws.json
-#          cp -r .ebextensions deploy/.ebextensions
-#          cd deploy && zip -r deploy.zip .
+      - name: Generate deployment package
+        run: |
+          mkdir -p deploy
+          cp Dockerrun.aws.json deploy/Dockerrun.aws.json
+          cp -r .ebextensions deploy/.ebextensions
+          cd deploy && zip -r deploy.zip .
 
       # 7. ECR 로그인
       - name: Login to Amazon ECR
@@ -82,7 +82,7 @@ jobs:
           cp Dockerrun.aws.json deploy/Dockerrun.aws.json
           cd deploy && zip -r deploy.zip .
       - name: Beanstalk Deploy
-        uses: einaregilsson/beanstalk-deploy@v19
+        uses: einaregilsson/beanstalk-deploy@v14
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
