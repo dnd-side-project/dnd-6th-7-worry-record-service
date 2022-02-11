@@ -1,6 +1,6 @@
 package dnd.project.dnd6th7worryrecordservice.jwt;
 
-import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
