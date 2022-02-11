@@ -3,9 +3,8 @@ package dnd.project.dnd6th7worryrecordservice.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,11 +46,10 @@ public class KakaoService {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            JsonObject main = element.getAsJsonObject().get("id").getAsJsonObject();
+            String kakaoId = element.getAsJsonObject().get("id").getAsString();
             JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
             JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
 
-            String kakaoId = main.getAsJsonObject().getAsString();
             String nickname = properties.getAsJsonObject().get("nickname").getAsString();
             String imgURL = properties.getAsJsonObject().get("profile_image").getAsString();
             String email = kakao_account.getAsJsonObject().get("email").getAsString();
