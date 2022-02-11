@@ -37,7 +37,6 @@ public class User {
 
 
     public User(String username, String email, String kakaoId, Role role, String imgUrl, String refreshToken) {
-
         this.username = username;
         this.email = email;
         this.kakaoId = kakaoId;
@@ -45,7 +44,5 @@ public class User {
         this.imgUrl = imgUrl;
         this.refreshToken = refreshToken;
     }
-
-
 
 }
