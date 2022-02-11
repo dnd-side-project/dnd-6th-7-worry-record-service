@@ -1,8 +1,8 @@
 package dnd.project.dnd6th7worryrecordservice.api;
 
 import dnd.project.dnd6th7worryrecordservice.domain.user.User;
-import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
-import dnd.project.dnd6th7worryrecordservice.dto.UserResponseDto;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserResponseDto;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import dnd.project.dnd6th7worryrecordservice.jwt.JwtUtil;
 import dnd.project.dnd6th7worryrecordservice.service.KakaoService;
