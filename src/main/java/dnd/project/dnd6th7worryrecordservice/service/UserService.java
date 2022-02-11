@@ -2,7 +2,7 @@ package dnd.project.dnd6th7worryrecordservice.service;
 
 import dnd.project.dnd6th7worryrecordservice.domain.user.User;
 import dnd.project.dnd6th7worryrecordservice.domain.user.UserRepository;
-import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;

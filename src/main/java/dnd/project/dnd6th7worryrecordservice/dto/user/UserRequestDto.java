@@ -1,4 +1,4 @@
-package dnd.project.dnd6th7worryrecordservice.dto;
+package dnd.project.dnd6th7worryrecordservice.dto.user;
 
 import dnd.project.dnd6th7worryrecordservice.domain.user.Role;
 import dnd.project.dnd6th7worryrecordservice.domain.user.User;
