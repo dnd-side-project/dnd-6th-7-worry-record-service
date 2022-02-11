@@ -1,5 +1,6 @@
-package dnd.project.dnd6th7worryrecordservice.controller;
+package dnd.project.dnd6th7worryrecordservice.api;
 
+import dnd.project.dnd6th7worryrecordservice.domain.user.User;
 import dnd.project.dnd6th7worryrecordservice.dto.UserRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.UserResponseDto;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -36,12 +38,17 @@ public class KakaoController {
 
         UserRequestDto userInfo = kakaoService.getUserInfo(accessToken);   //accessToken으로 유저정보 받아오기
         if (userInfo.getKakaoId() != null) {
-            UserResponseDto userResponseDto = new UserResponseDto(userInfo.getUsername(), userInfo.getEmail(), userInfo.getImgURL());
 
             TokenDto tokens = jwtUtil.createToken(userInfo);
             userInfo.setRefreshToken(tokens.getJwtRefreshToken());
+
             //kakaoId 기준으로 DB select하여 User 데이터가 없으면 Insert, 있으면 Update
             userService.insertOrUpdateUser(userInfo);
+
+            Optional<User> userByKakaoId = userService.findUserByKakaoId(userInfo.getKakaoId());
+
+            //UserResponseDto에 userId 추가
+            UserResponseDto userResponseDto = new UserResponseDto(userByKakaoId.get().getUserId(), userInfo.getUsername(), userInfo.getEmail(), userInfo.getImgURL());
 
             res.addHeader("at-jwt-access-token", tokens.getJwtAccessToken());
             res.addHeader("at-jwt-refresh-token", tokens.getJwtRefreshToken());
@@ -50,36 +57,6 @@ public class KakaoController {
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-    }
-
-    @ApiOperation(value = "토큰 발급 테스트", notes = "JWT AccessToken, RefreshToken 발급 테스트")
-    @PostMapping(value = "/test")
-    public ResponseEntity<UserResponseDto> tokenTest(HttpServletResponse res) {
-        String username = "testUser";
-        String kakaoId = "1234123";
-        String email = "test@naver.com";
-        String imgURL = "test.jpg";
-
-        UserRequestDto userInfo = new UserRequestDto(username, email, kakaoId, imgURL);
-        UserResponseDto userResponseDto = new UserResponseDto(username, email, imgURL);
-
-        TokenDto tokens = jwtUtil.createToken(userInfo);
-        userInfo.setRefreshToken(tokens.getJwtRefreshToken());
-
-        userService.insertOrUpdateUser(userInfo);
-
-        res.addHeader("at-jwt-access-token", tokens.getJwtAccessToken());
-        res.addHeader("at-jwt-refresh-token", tokens.getJwtRefreshToken());
-
-        return ResponseEntity.ok(userResponseDto);
-    }
-
-    //WebConfig addInterceptors 메서드에서 토큰 검증할 path 설정 가능
-    @ApiOperation(value = "토큰 검증 테스트", notes = "JWT Token 검증 테스트")
-    @GetMapping(value = "/validTest")
-    public ResponseEntity<?> validTest() {
-
-        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 }
 
