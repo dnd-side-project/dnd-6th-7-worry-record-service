@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @RestController
-public class KakaoController {
+public class AuthController {
     private final JwtUtil jwtUtil;
     private final KakaoService kakaoService;
     private final UserService userService;
@@ -33,7 +33,7 @@ public class KakaoController {
             name = "token"
             , value = "카카오 엑세스 토큰"
             , defaultValue = "None")
-    @PostMapping(value = "/login")
+    @PostMapping(value = "/kakao")
     public ResponseEntity<UserResponseDto> giveToken(@RequestParam("token") String accessToken, HttpServletResponse res) {
 
         UserRequestDto userInfo = kakaoService.getUserInfo(accessToken);   //accessToken으로 유저정보 받아오기
