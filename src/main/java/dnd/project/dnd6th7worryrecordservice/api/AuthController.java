@@ -69,7 +69,7 @@ public class AuthController {
 //            @RequestHeader(value="X-AUTH-TOKEN") String token,
 //            @RequestHeader(value="REFRESH-TOKEN") String refreshToken ) {
 //        return responseService.handleSingleResult(signService.refreshToken(token, refreshToken));
-//    }
+//    } 
 //
 //}
 
