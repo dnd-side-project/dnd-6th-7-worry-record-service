@@ -4,6 +4,7 @@ import dnd.project.dnd6th7worryrecordservice.domain.category.Category;
 import dnd.project.dnd6th7worryrecordservice.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface WorryRepository extends JpaRepository<Worry, Long> {
@@ -20,6 +21,9 @@ public interface WorryRepository extends JpaRepository<Worry, Long> {
 
     //worries/past/mean,meanless
     List<Worry> findByUserAndIsFinishedAndIsRealized(User user ,boolean isFinished, boolean isRealized);
+
+    //worries/chat/realized/{worryId}
+    List<Worry> findByUserAndWorryStartDateBetween(User user, LocalDateTime fromDate, LocalDateTime toDate);
 
     //worries/{worryId} - delete
     void delete(Worry worry);

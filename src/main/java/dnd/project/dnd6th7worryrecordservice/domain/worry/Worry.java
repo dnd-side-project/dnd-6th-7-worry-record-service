@@ -63,4 +63,6 @@ public class Worry {
     public void changeLockState(){
         this.isLocked = !isLocked;
     }
+
+    public void setRealized(boolean realized) {this.isRealized = realized; }
 }
