@@ -6,6 +6,8 @@ import dnd.project.dnd6th7worryrecordservice.domain.user.User;
 import dnd.project.dnd6th7worryrecordservice.domain.worry.Worry;
 import dnd.project.dnd6th7worryrecordservice.domain.worry.WorryRepository;
 import dnd.project.dnd6th7worryrecordservice.dto.user.UserResponseDto;
+import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryChatResponseDto;
+import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryCntResponseDto;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryResponseDto;
 import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import dnd.project.dnd6th7worryrecordservice.service.WorryService;
@@ -60,9 +62,33 @@ public class WorryController {
         return ResponseEntity.ok(worryList);
     }
 
+    //걱정 보관함 - 걱정 잠금/해제
     @PatchMapping("/{worryId}")
-    public ResponseEntity turnLockState(@RequestParam("worryId") Long worryId){
+    public ResponseEntity turnLockState(@PathVariable Long worryId){
         worryService.turnWorryLockState(worryId);
         return ResponseEntity.ok("");
+    }
+
+    //걱정 보관함 - 걱정 삭제
+    @DeleteMapping("/{worryId}")
+    public ResponseEntity removeWorry(@PathVariable Long worryId){
+        worryService.deleteWorry(worryId);
+        return ResponseEntity.ok("");
+    }
+
+
+    //후기 작성 채팅방 - 열기
+    @GetMapping("/chat/{worryId}")
+    public ResponseEntity<WorryChatResponseDto> openWorryChat(@PathVariable Long worryId){
+        WorryChatResponseDto worryChatResponseDto = worryService.worryChatOpen(worryId);
+        System.out.println("worryChatResponseDto = " + worryChatResponseDto.getCategoryName());
+        return ResponseEntity.ok(worryChatResponseDto);
+    }
+
+    //후기 장성 채팅방 - 걱정 실현 여부 입력
+    @PostMapping("/chat")
+    public ResponseEntity<WorryCntResponseDto> inputWorryIsRealized(@RequestParam("userId") Long userId, @RequestParam("worryId") Long worryId, @RequestParam("isRealized") boolean isRealized){
+        WorryCntResponseDto worryCntResponseDto = worryService.worryChatSetRealized(userId, worryId, isRealized);
+        return ResponseEntity.ok(worryCntResponseDto);
     }
 }

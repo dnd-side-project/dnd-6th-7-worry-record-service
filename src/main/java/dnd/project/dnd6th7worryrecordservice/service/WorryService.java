@@ -1,16 +1,17 @@
 package dnd.project.dnd6th7worryrecordservice.service;
 
 import dnd.project.dnd6th7worryrecordservice.domain.category.Category;
-import dnd.project.dnd6th7worryrecordservice.domain.category.CategoryRepository;
 import dnd.project.dnd6th7worryrecordservice.domain.user.User;
-import dnd.project.dnd6th7worryrecordservice.domain.user.UserRepository;
 import dnd.project.dnd6th7worryrecordservice.domain.worry.Worry;
 import dnd.project.dnd6th7worryrecordservice.domain.worry.WorryRepository;
+import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryChatResponseDto;
+import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryCntResponseDto;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class WorryService {
 
             List<Worry> worryList = worryRepository.findByIsFinishedAndUserOrderByWorryStartDateAsc(isFinished, user.get());
             for (Worry worry : worryList) {
-                WorryResponseDto responseDto = getWorryResponseDto_noIsFinished(worry);
+                WorryResponseDto responseDto = getWorryResponseDto(worry);
                 worryDtoList.add(responseDto);
             }
             return worryDtoList;
@@ -97,6 +98,48 @@ public class WorryService {
         worryRepository.delete(worry);
     }
 
+    //걱정 후기 채팅방 - 열기
+    public WorryChatResponseDto worryChatOpen(Long worryId){
+        Worry worry = worryRepository.findWorryByWorryId(worryId);
+        WorryChatResponseDto worryChatResponseDto = WorryChatResponseDto.builder()
+                .worryStartDate(worry.getWorryStartDate())
+                .categoryName(worry.getCategory().getCategoryName())
+                .worryText(worry.getWorryText())
+                .build();
+
+        return worryChatResponseDto;
+    }
+
+    //걱정 후기 채팅방 - 걱정 실현 여부 입력
+    public WorryCntResponseDto worryChatSetRealized(Long userId, Long worryId, boolean isRealized){
+        Worry worry = worryRepository.findWorryByWorryId(worryId);
+        worry.setRealized(isRealized);
+
+        Optional<User> optionalUser = userService.findUserByUserId(userId);
+
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            LocalDateTime time = LocalDateTime.now();
+
+            List<Worry> worryList = worryRepository.findByUserAndWorryStartDateBetween(user, time.minusMonths(2), time);
+            int realizedCnt = 0;
+
+            for (Worry w : worryList) {
+                if(w.isRealized() == true){
+                    realizedCnt++;
+                }
+            }
+
+            WorryCntResponseDto worryCntResponseDto = WorryCntResponseDto.builder()
+                    .worryCnt(worryList.size())
+                    .meaningfulWorryCnt(realizedCnt)
+                    .build();
+
+            return worryCntResponseDto;
+        }else{
+            return null;
+        }
+    }
 
 
     private WorryResponseDto getWorryResponseDto(Worry worry) {
@@ -110,21 +153,6 @@ public class WorryService {
                 .category(worry.getCategory())
                 .build();
         return responseDto;
-
-    }
-
-
-    private WorryResponseDto getWorryResponseDto_noIsFinished(Worry worry) {
-        WorryResponseDto responseDto = WorryResponseDto.builder()
-                .worryId(worry.getWorryId())
-                .worryStartDate(worry.getWorryStartDate())
-                .worryExpiryDate(worry.getWorryExpiryDate())
-                .isRealized(worry.isRealized())
-                .isLocked(worry.isLocked())
-                .category(worry.getCategory())
-                .build();
-        return responseDto;
-
 
     }
 }

@@ -1,40 +1,77 @@
 spring:
-
-  #  datasource:
-  #    url: ${MYSQL_URL}
-  #    username: ${MYSQL_USERNAME}
-  #    password: ${MYSQL_PW}
-  #    driver-class-name: com.mysql.cj.jdbc.Driver
-  #    hikari:
-  #      maximum-pool-size: 30
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    hikari:
+      maximum-pool-size: 30
 
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  profiles:
+    include: oauth
+
+  main:
+    allow-bean-definition-overriding: true
+
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    #    show-sql: true
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
+
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     generate-ddl: true
     open-in-view: false
 
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: debug
-        type:
-          descriptor:
-            sql: trace
-    com:
-      amazonaws:
-        util:
-          EC2MetadataUtils: error
-
 jwt:
-  secret: ${JWT_SECRET}
+  secret: thisissecretkey01294809180@@12120980
+
+security:
+  oauth2:
+    client:
+      registration:
+        kakao:
+          client-id: b3636f1f4fd900be0cfcc903dfac2ae2
+          client-secret: WrERbTlpoB2YcpoeWOvK5P84UxLiEftu
+          admin-key: f9e8d89d327beff841652e5103fb8302
+          scope:
+          authorization-grant-type: authorization_code
+          redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+          client-name: Kakao
+          client-authentication-method: POST
+
+      provider:
+
+        kakao:
+          authorization-uri: https://kauth.kakao.com/oauth/authorize
+          token-uri: https://kauth.kakao.com/oauth/token
+          user-info-uri: https://kapi.kakao.com/v2/user/me
+          redir-uri: http://localhost:8080/login/oauth2/code/kakao
+          user-name-attribute: id
+
+#logging:
+#  slack:
+#    webhook-uri: ${AWS_SM_SLACK_WEBHOOK_URL}
+#  config: classpath:logback-slack.xml
+#  level:
+#    org:
+#      hibernate:
+#        SQL: debug
+#        type:
+#          descriptor:
+#            sql: trace
+#    com:
+#      amazonaws:
+#        util:
+#          EC2MetadataUtils: error
+
+#jwt:
+#  secret: ${JWT_SECRET}
