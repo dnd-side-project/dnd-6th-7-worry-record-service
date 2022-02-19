@@ -69,9 +69,9 @@ public class WorryService {
     }
 
     //걱정 보관함 - 지난 걱정 - 의미 있는 걱정/의미 없는 걱정
-    public List<WorryResponseDto> findMeanOrMeanlessWorry(Long userId, boolean isRealized){
+    public List<WorryResponseDto> findMeanOrMeanlessWorry(Long userId, boolean isRealized) {
         Optional<User> user = userService.findUserByUserId(userId);
-        if(user.isPresent()){
+        if (user.isPresent()) {
 
             List<Worry> worryList = worryRepository.findByUserAndIsFinishedAndIsRealizedOrderByWorryStartDateAsc(user.get(), true, isRealized);
             List<WorryResponseDto> worryDtoList = new ArrayList<>();
@@ -82,28 +82,28 @@ public class WorryService {
             }
 
             return worryDtoList;
-        } else{
+        } else {
             return null;
         }
     }
 
     //걱정 보관함 - 걱정 잠금/해제
-    public void turnWorryLockState(Long worryId){
+    public void turnWorryLockState(Long worryId) {
         Worry worry = worryRepository.findWorryByWorryId(worryId);
-        if(worry.isLocked() == true)
+        if (worry.isLocked() == true)
             worryRepository.openLockState(worryId, false);
         else
             worryRepository.closeLockState(worryId, true);
     }
 
     //걱정 보관함 - 걱정 삭제
-    public void deleteWorry(Long worryId){
+    public void deleteWorry(Long worryId) {
         Worry worry = worryRepository.findWorryByWorryId(worryId);
         worryRepository.delete(worry);
     }
 
     //걱정 후기 채팅방 - 열기
-    public WorryChatResponseDto worryChatOpen(Long worryId){
+    public WorryChatResponseDto worryChatOpen(Long worryId) {
         Worry worry = worryRepository.findWorryByWorryId(worryId);
         WorryChatResponseDto worryChatResponseDto = WorryChatResponseDto.builder()
                 .worryStartDate(worry.getWorryStartDate())
@@ -115,11 +115,11 @@ public class WorryService {
     }
 
     //걱정 후기 채팅방 - 걱정 실현 여부 입력
-    public WorryCntResponseDto worryChatSetRealized(Long userId, Long worryId, boolean isRealized){
+    public WorryCntResponseDto worryChatSetRealized(Long userId, Long worryId, boolean isRealized) {
         worryRepository.setIsRealized(worryId, isRealized);
         Optional<User> optionalUser = userService.findUserByUserId(userId);
 
-        if(optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             LocalDateTime time = LocalDateTime.now();
 
@@ -127,7 +127,7 @@ public class WorryService {
             int realizedCnt = 0;
 
             for (Worry w : worryList) {
-                if(w.isRealized() == true){
+                if (w.isRealized() == true) {
                     realizedCnt++;
                 }
             }
@@ -138,18 +138,18 @@ public class WorryService {
                     .build();
 
             return worryCntResponseDto;
-        }else{
+        } else {
             return null;
         }
     }
 
     //걱정 후기 채팅방 - 걱정 만료일 수정
-    public boolean changeWorryExpiryDate(Long worryId, LocalDateTime worryExpiryDate){
+    public boolean changeWorryExpiryDate(Long worryId, LocalDateTime worryExpiryDate) {
         try {
             Worry worry = worryRepository.findWorryByWorryId(worryId);
             worryRepository.changeExpiryDate(worryId, worryExpiryDate);
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -157,9 +157,9 @@ public class WorryService {
     }
 
     //걱정 후기 불러오기
-    public WorryReviewResponseDto checkIsLockedAndCallReview(Long worryId){
+    public WorryReviewResponseDto checkIsLockedAndCallReview(Long worryId) {
         Worry worry = worryRepository.findWorryByWorryId(worryId);
-        if(worry.isLocked() == false){
+        if (worry.isLocked() == false) {
 
             WorryReviewResponseDto worryDto = WorryReviewResponseDto.builder()
                     .worryId(worry.getWorryId())
@@ -170,9 +170,19 @@ public class WorryService {
                     .build();
 
             return worryDto;
-        }else{
+        } else {
             return null;
         }
+    }
+
+    //worries/review/realize
+    public void worryReviewModifyRealized(Long worryId, boolean isRealized) {
+        worryRepository.setIsRealized(worryId, isRealized);
+    }
+
+    //worries/review - patch
+    public void worryReviewModifyText(Long worryId, String worryText) {
+        worryRepository.changeWorryReview(worryId, worryText);
     }
 
 
