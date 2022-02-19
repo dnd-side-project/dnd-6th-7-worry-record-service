@@ -5,6 +5,7 @@ import dnd.project.dnd6th7worryrecordservice.domain.worry.WorryRepository;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryChatResponseDto;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryCntResponseDto;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryResponseDto;
+import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryReviewResponseDto;
 import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import dnd.project.dnd6th7worryrecordservice.service.WorryService;
 import io.jsonwebtoken.lang.Assert;
@@ -67,8 +68,12 @@ public class WorryController {
     //걱정 보관함 - 걱정 삭제
     @DeleteMapping("/{worryId}")
     public ResponseEntity removeWorry(@PathVariable Long worryId) {
-        worryService.deleteWorry(worryId);
-        return ResponseEntity.ok("");
+        try {
+            worryService.deleteWorry(worryId);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
     }
 
 
@@ -101,6 +106,18 @@ public class WorryController {
         } else{
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
+    }
 
+    //걱정 후기 불러오기
+    @GetMapping("/review/{worryId}")
+    public ResponseEntity<WorryReviewResponseDto> callWorryReview(@PathVariable Long worryId){
+        try {
+            WorryReviewResponseDto worryReviewResponseDto = worryService.checkIsLockedAndCallReview(worryId);
+            Assert.notNull(worryReviewResponseDto);
+
+            return ResponseEntity.ok(worryReviewResponseDto);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
