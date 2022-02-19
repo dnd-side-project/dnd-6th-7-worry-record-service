@@ -50,4 +50,8 @@ public interface WorryRepository extends JpaRepository<Worry, Long> {
     @Query("update Worry w set w.isRealized = ?2 where w.worryId = ?1")
     void setIsRealized(Long worryId, boolean state);
 
+    @Modifying
+    @Query("update Worry w set w.worryReview = ?2 where w.worryId = ?1")
+    void changeWorryReview(Long worryId, String review);
+
 }

@@ -2,10 +2,7 @@ package dnd.project.dnd6th7worryrecordservice.api;
 
 import dnd.project.dnd6th7worryrecordservice.domain.category.CategoryRepository;
 import dnd.project.dnd6th7worryrecordservice.domain.worry.WorryRepository;
-import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryChatResponseDto;
-import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryCntResponseDto;
-import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryResponseDto;
-import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryReviewResponseDto;
+import dnd.project.dnd6th7worryrecordservice.dto.worry.*;
 import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import dnd.project.dnd6th7worryrecordservice.service.WorryService;
 import io.jsonwebtoken.lang.Assert;
@@ -116,8 +113,30 @@ public class WorryController {
             Assert.notNull(worryReviewResponseDto);
 
             return ResponseEntity.ok(worryReviewResponseDto);
-        }catch (Exception e){
+        } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //걱정 후기 수정 - 실현 여부 수정
+    @PatchMapping("/review/realize")
+    public ResponseEntity modifyIsRealized(@RequestParam("worryId") Long worryId, @RequestParam("isRealized") boolean isRealized){
+        try{
+            worryService.worryReviewModifyRealized(worryId, isRealized);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //걱정 후기 수정 - 후기 내용 수정
+    @PatchMapping("/review")
+    public ResponseEntity modifyWorryReview(@RequestBody final WorryReviewModifyRequestDto worryRequestDto){
+        try{
+            worryService.worryReviewModifyText(worryRequestDto.getWorryId(), worryRequestDto.getWorryReview());
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
 }
