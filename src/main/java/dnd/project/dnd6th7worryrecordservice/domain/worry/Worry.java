@@ -59,10 +59,4 @@ public class Worry {
         this.worryExpiryDate = worryExpiryDate;
         this.worryReview = worryReview;
     }
-
-    public void changeLockState(){
-        this.isLocked = !isLocked;
-    }
-
-    public void setRealized(boolean realized) {this.isRealized = realized; }
 }
