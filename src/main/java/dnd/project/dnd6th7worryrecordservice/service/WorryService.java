@@ -7,6 +7,7 @@ import dnd.project.dnd6th7worryrecordservice.domain.worry.WorryRepository;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryChatResponseDto;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryCntResponseDto;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryResponseDto;
+import dnd.project.dnd6th7worryrecordservice.dto.worry.WorryReviewResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -153,6 +154,25 @@ public class WorryService {
             return false;
         }
 
+    }
+
+    //걱정 후기 불러오기
+    public WorryReviewResponseDto checkIsLockedAndCallReview(Long worryId){
+        Worry worry = worryRepository.findWorryByWorryId(worryId);
+        if(worry.isLocked() == false){
+
+            WorryReviewResponseDto worryDto = WorryReviewResponseDto.builder()
+                    .worryId(worry.getWorryId())
+                    .worryStartDate(worry.getWorryStartDate())
+                    .categoryName(worry.getCategory().getCategoryName())
+                    .worryText(worry.getWorryText())
+                    .worryReview(worry.getWorryReview())
+                    .build();
+
+            return worryDto;
+        }else{
+            return null;
+        }
     }
 
 
