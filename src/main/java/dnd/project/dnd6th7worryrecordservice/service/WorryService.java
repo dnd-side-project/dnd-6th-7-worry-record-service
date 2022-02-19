@@ -72,7 +72,7 @@ public class WorryService {
         Optional<User> user = userService.findUserByUserId(userId);
         if(user.isPresent()){
 
-            List<Worry> worryList = worryRepository.findByUserAndIsFinishedAndIsRealized(user.get(), true, isRealized);
+            List<Worry> worryList = worryRepository.findByUserAndIsFinishedAndIsRealizedOrderByWorryStartDateAsc(user.get(), true, isRealized);
             List<WorryResponseDto> worryDtoList = new ArrayList<>();
 
             for (Worry worry : worryList) {
@@ -89,7 +89,10 @@ public class WorryService {
     //걱정 보관함 - 걱정 잠금/해제
     public void turnWorryLockState(Long worryId){
         Worry worry = worryRepository.findWorryByWorryId(worryId);
-        worry.changeLockState();
+        if(worry.isLocked() == true)
+            worryRepository.openLockState(worryId, false);
+        else
+            worryRepository.closeLockState(worryId, true);
     }
 
     //걱정 보관함 - 걱정 삭제
@@ -112,16 +115,14 @@ public class WorryService {
 
     //걱정 후기 채팅방 - 걱정 실현 여부 입력
     public WorryCntResponseDto worryChatSetRealized(Long userId, Long worryId, boolean isRealized){
-        Worry worry = worryRepository.findWorryByWorryId(worryId);
-        worry.setRealized(isRealized);
-
+        worryRepository.setIsRealized(worryId, isRealized);
         Optional<User> optionalUser = userService.findUserByUserId(userId);
 
         if(optionalUser.isPresent()){
             User user = optionalUser.get();
             LocalDateTime time = LocalDateTime.now();
 
-            List<Worry> worryList = worryRepository.findByUserAndWorryStartDateBetween(user, time.minusMonths(2), time);
+            List<Worry> worryList = worryRepository.findByUserAndWorryStartDateBetweenOrderByWorryStartDateAsc(user, time.minusMonths(2), time);
             int realizedCnt = 0;
 
             for (Worry w : worryList) {
@@ -139,6 +140,19 @@ public class WorryService {
         }else{
             return null;
         }
+    }
+
+    //걱정 후기 채팅방 - 걱정 만료일 수정
+    public boolean changeWorryExpiryDate(Long worryId, LocalDateTime worryExpiryDate){
+        try {
+            Worry worry = worryRepository.findWorryByWorryId(worryId);
+            worryRepository.changeExpiryDate(worryId, worryExpiryDate);
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
 
