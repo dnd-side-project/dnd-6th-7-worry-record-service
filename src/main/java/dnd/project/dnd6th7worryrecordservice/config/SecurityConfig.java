@@ -34,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // preflight 대응
                 .antMatchers("/auth/**").permitAll() // /auth/**에 대한 접근을 인증 절차 없이 허용(로그인 관련 url)
+                .antMatchers("/worries/**").permitAll() // /worries/**에 대한 접근을 인증 절차 없이 허용(로그인 관련 url)
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers("/ping").permitAll()
                 // 특정 권한을 가진 사용자만 접근을 허용해야 할 경우, 하기 항목을 통해 가능

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+
 @Getter
 @NoArgsConstructor
 @Table(name = "USER")
