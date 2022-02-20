@@ -11,15 +11,24 @@ import java.util.List;
 
 public interface WorryRepository extends JpaRepository<Worry, Long> {
 
+    //worries/write
     Worry save(Worry worry);
 
     Worry findWorryByWorryId(Long worryId);
+
+
+
+    //worries/home && /worries/recent
+    List<Worry> findByUserAndWorryStartDateBetween(User user, LocalDateTime fromDate, LocalDateTime toDate);
+
+    //worries/recent/filter
+    List<Worry> findByUserAndIsFinishedAndCategoryInAndWorryStartDateBetweenOrderByWorryStartDateAsc(User user, boolean isFinished, List<Category> categoryList, LocalDateTime fromDate, LocalDateTime toDate);
 
     //worries/past
     List<Worry> findByIsFinishedAndUserOrderByWorryStartDateAsc(boolean isFinished, User user);
 
     //worries/past/filter
-    List<Worry> findByUserAndCategoryInOrderByWorryStartDateAsc(User user, List<Category> categoryList);
+    List<Worry> findByUserAndIsFinishedAndCategoryInOrderByWorryStartDateAsc(User user, boolean isFinished,List<Category> categoryList);
 
     //worries/past/mean,meanless
     List<Worry> findByUserAndIsFinishedAndIsRealizedOrderByWorryStartDateAsc(User user , boolean isFinished, boolean isRealized);
