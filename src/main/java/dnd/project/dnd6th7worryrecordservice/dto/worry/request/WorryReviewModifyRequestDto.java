@@ -1,4 +1,4 @@
-package dnd.project.dnd6th7worryrecordservice.dto.worry;
+package dnd.project.dnd6th7worryrecordservice.dto.worry.request;
 
 import lombok.Getter;
 import lombok.Setter;
