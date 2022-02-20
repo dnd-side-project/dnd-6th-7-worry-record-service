@@ -25,6 +25,10 @@ public class UserService {
         }
     }
 
+    public Optional<User> findUserByUserId(Long userId){
+        Optional<User> user = userRepository.findByUserId(userId);
+        return user;
+    }
 
     public Optional<User> findUserByKakaoId(String kakaoId){
         Optional<User> user = userRepository.findByKakaoId(kakaoId);
