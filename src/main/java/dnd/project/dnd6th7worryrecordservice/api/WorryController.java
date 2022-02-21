@@ -1,11 +1,8 @@
 package dnd.project.dnd6th7worryrecordservice.api;
 
-import dnd.project.dnd6th7worryrecordservice.domain.category.CategoryRepository;
-import dnd.project.dnd6th7worryrecordservice.domain.worry.WorryRepository;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.request.WorryRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.request.WorryReviewModifyRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.response.*;
-import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import dnd.project.dnd6th7worryrecordservice.service.WorryService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
