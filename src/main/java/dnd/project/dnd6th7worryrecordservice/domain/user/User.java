@@ -1,9 +1,12 @@
 package dnd.project.dnd6th7worryrecordservice.domain.user;
 
+import dnd.project.dnd6th7worryrecordservice.domain.worry.Worry;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -36,6 +39,8 @@ public class User {
     @Column(name = "refreshToken", nullable = false)
     private String refreshToken;
 
+    @OneToMany(mappedBy = "user")
+    List<Worry> worryList = new ArrayList<>();
 
     public User(String username, String email, String kakaoId, Role role, String imgUrl, String refreshToken) {
         this.username = username;
