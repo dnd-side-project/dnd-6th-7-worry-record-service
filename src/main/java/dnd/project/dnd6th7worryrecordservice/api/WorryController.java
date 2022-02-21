@@ -22,11 +22,7 @@ import java.util.List;
 @RequestMapping("/worries")
 @RestController
 public class WorryController {
-    private final UserService userService;
-    private final CategoryRepository categoryRepository;
-    private final WorryRepository worryRepository;
     private final WorryService worryService;
-    private EntityManager em;
 
 
     //홈 화면
