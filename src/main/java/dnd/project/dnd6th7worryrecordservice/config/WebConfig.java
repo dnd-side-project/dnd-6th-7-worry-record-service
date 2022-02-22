@@ -14,21 +14,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     private final UserService userService;
 
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        System.out.println("####### Register Interceptor: JwtInterceptor!!!");
-//        registry.addInterceptor(jwtInterceptor()).addPathPatterns("/worries/**");   //토큰을 검증할 path
-//    }
-//
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedMethods("GET", "POST")
-//                .exposedHeaders("at-jwt-access-token", "at-jwt-refresh-token");
-//    }
-//
-//    @Bean
-//    public JwtInterceptor jwtInterceptor() {
-//        return new JwtInterceptor(userService);
-//    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        System.out.println("####### Register Interceptor: JwtInterceptor!!!");
+        registry.addInterceptor(jwtInterceptor()).addPathPatterns("/worries/**");   //토큰을 검증할 path
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("GET", "POST")
+                .exposedHeaders("at-jwt-access-token", "at-jwt-refresh-token");
+    }
+
+    @Bean
+    public JwtInterceptor jwtInterceptor() {
+        return new JwtInterceptor(userService);
+    }
 }
