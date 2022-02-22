@@ -49,7 +49,7 @@ public class WorryController {
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -61,7 +61,7 @@ public class WorryController {
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -73,7 +73,7 @@ public class WorryController {
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -85,7 +85,7 @@ public class WorryController {
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -97,7 +97,7 @@ public class WorryController {
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -109,7 +109,7 @@ public class WorryController {
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -146,7 +146,7 @@ public class WorryController {
             Assert.notNull(worryCntResponseDto);
             return ResponseEntity.ok(worryCntResponseDto);
         } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
 
