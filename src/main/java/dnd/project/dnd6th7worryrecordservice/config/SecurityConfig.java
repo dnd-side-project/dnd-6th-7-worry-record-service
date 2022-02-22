@@ -30,29 +30,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-//        http
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.OPTIONS).permitAll() // preflight 대응
-//                .antMatchers("/auth/**").permitAll() // /auth/**에 대한 접근을 인증 절차 없이 허용(로그인 관련 url)
-//                .antMatchers("/worries/**").permitAll() // /worries/**에 대한 접근을 인증 절차 없이 허용(로그인 관련 url)
-//                .antMatchers(HttpMethod.POST, "/login").permitAll()
-//                .antMatchers("/ping").permitAll()
-//                // 특정 권한을 가진 사용자만 접근을 허용해야 할 경우, 하기 항목을 통해 가능
-//                //.antMatchers("/admin/**").hasAnyRole("ADMIN")
-//                .anyRequest().authenticated() // 위에서 따로 지정한 접근허용 리소스 설정 후 그 외 나머지 리소스들은 무조건 인증을 완료해야 접근 가능
-//                .and()
-//                .headers() // 아래에 X-Frame-Option 헤더 설정을 위해 headers() 작성
-//                .frameOptions().sameOrigin() // 동일 도메인에서는 iframe 접근 가능하도록 X-Frame-Options을 smaeOrigin()으로 설정
-//                .and()
-//                .cors()
-//                .and()
-//                .csrf().disable()
-//                // 예외 처리를 하고 싶다면 아래와 같이 작성 가능합니다.
-//                //.exceptionHandling() // 예외 처리 지정
-//                //.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-//                //.accessDeniedHandler(new CustomAccessDeniedHandler())
-//                .sessionManagement()    //스프링 시큐리티 session 정책
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 스프링시큐리티가 생성하지도않고 기존것을 사용하지도 않음(JWT 같은토큰방식을 쓸때 사용하는 설정)
+        http
+                .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS).permitAll() // preflight 대응
+                .antMatchers("/auth/**").permitAll() // /auth/**에 대한 접근을 인증 절차 없이 허용(로그인 관련 url)
+                .antMatchers("/worries/**").permitAll() // /worries/**에 대한 접근을 인증 절차 없이 허용(로그인 관련 url)
+                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers("/ping").permitAll()
+                // 특정 권한을 가진 사용자만 접근을 허용해야 할 경우, 하기 항목을 통해 가능
+                //.antMatchers("/admin/**").hasAnyRole("ADMIN")
+                .anyRequest().authenticated() // 위에서 따로 지정한 접근허용 리소스 설정 후 그 외 나머지 리소스들은 무조건 인증을 완료해야 접근 가능
+                .and()
+                .headers() // 아래에 X-Frame-Option 헤더 설정을 위해 headers() 작성
+                .frameOptions().sameOrigin() // 동일 도메인에서는 iframe 접근 가능하도록 X-Frame-Options을 smaeOrigin()으로 설정
+                .and()
+                .cors()
+                .and()
+                .csrf().disable()
+                // 예외 처리를 하고 싶다면 아래와 같이 작성 가능합니다.
+                //.exceptionHandling() // 예외 처리 지정
+                //.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                //.accessDeniedHandler(new CustomAccessDeniedHandler())
+                .sessionManagement()    //스프링 시큐리티 session 정책
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 스프링시큐리티가 생성하지도않고 기존것을 사용하지도 않음(JWT 같은토큰방식을 쓸때 사용하는 설정)
 
     }
 
