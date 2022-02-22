@@ -20,7 +20,6 @@ import java.util.List;
 public class WorryController {
     private final WorryService worryService;
 
-
     //홈 화면
     @GetMapping("/home")
     public ResponseEntity<WorryHomeResponseDto> home(@RequestParam("userId") Long userId) {
@@ -65,7 +64,6 @@ public class WorryController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 
     //걱정 보관함 - 지난 걱정
     @GetMapping("/past")
@@ -132,7 +130,6 @@ public class WorryController {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
-
 
     //후기 작성 채팅방 - 열기
     @GetMapping("/chat/{worryId}")
