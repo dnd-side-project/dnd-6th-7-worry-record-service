@@ -10,4 +10,5 @@ import lombok.Setter;
 public class WorryHomeResponseDto {
     private String meanlessWorryPer;
     private short recentWorryCnt;
+    private String imgUrl;
 }
