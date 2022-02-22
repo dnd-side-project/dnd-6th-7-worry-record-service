@@ -1,11 +1,8 @@
 package dnd.project.dnd6th7worryrecordservice.api;
 
-import dnd.project.dnd6th7worryrecordservice.domain.category.CategoryRepository;
-import dnd.project.dnd6th7worryrecordservice.domain.worry.WorryRepository;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.request.WorryRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.request.WorryReviewModifyRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.response.*;
-import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import dnd.project.dnd6th7worryrecordservice.service.WorryService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,12 +18,7 @@ import java.util.List;
 @RequestMapping("/worries")
 @RestController
 public class WorryController {
-    private final UserService userService;
-    private final CategoryRepository categoryRepository;
-    private final WorryRepository worryRepository;
     private final WorryService worryService;
-    private EntityManager em;
-
 
     //홈 화면
     @GetMapping("/home")
@@ -73,7 +64,6 @@ public class WorryController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 
     //걱정 보관함 - 지난 걱정
     @GetMapping("/past")
@@ -140,7 +130,6 @@ public class WorryController {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
-
 
     //후기 작성 채팅방 - 열기
     @GetMapping("/chat/{worryId}")
