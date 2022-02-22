@@ -1,5 +1,6 @@
 package dnd.project.dnd6th7worryrecordservice.service;
 
+import dnd.project.dnd6th7worryrecordservice.aws.S3Util;
 import dnd.project.dnd6th7worryrecordservice.domain.category.Category;
 import dnd.project.dnd6th7worryrecordservice.domain.user.User;
 import dnd.project.dnd6th7worryrecordservice.domain.worry.Worry;
@@ -22,6 +23,7 @@ public class WorryService {
     private final WorryRepository worryRepository;
     private final UserService userService;
     private final CategoryService categoryService;
+    private final S3Util s3Util;
 
     //홈 화면
     public WorryHomeResponseDto home(Long userId) {
@@ -41,7 +43,10 @@ public class WorryService {
             }
             String meanlessWorryPer = Math.round((meanlessWorryCnt / finishedWorryCnt * 100)) + "%";
 
-            WorryHomeResponseDto worryResponseDto = new WorryHomeResponseDto(meanlessWorryPer, (short) worryList.size());
+            int worryCnt = worryList.size();
+            String imgUrl = s3Util.downloadFile(String.valueOf(1));
+
+            WorryHomeResponseDto worryResponseDto = new WorryHomeResponseDto(meanlessWorryPer, (short) worryList.size(), imgUrl);
             return worryResponseDto;
         } else {
             return null;
@@ -204,6 +209,7 @@ public class WorryService {
     //걱정 후기 채팅방 - 걱정 실현 여부 입력
     public WorryCntResponseDto worryChatSetRealized(Long userId, Long worryId, boolean isRealized) {
         worryRepository.setIsRealized(worryId, isRealized);
+        worryRepository.setIsFinished(worryId, true);
         Optional<User> optionalUser = userService.findUserByUserId(userId);
 
         if (optionalUser.isPresent()) {
