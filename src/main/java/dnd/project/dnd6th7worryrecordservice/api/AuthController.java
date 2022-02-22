@@ -9,6 +9,7 @@ import dnd.project.dnd6th7worryrecordservice.service.KakaoService;
 import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +36,9 @@ public class AuthController {
             , defaultValue = "None")
     @PostMapping(value = "/kakao")
     public ResponseEntity<UserResponseDto> giveToken(@RequestParam("token") String accessToken, HttpServletResponse res) {
-
+        System.out.println("accessToken = " + accessToken);
         UserRequestDto userInfo = kakaoService.getUserInfo(accessToken);   //accessToken으로 유저정보 받아오기
         if (userInfo.getKakaoId() != null) {
-
             TokenDto tokens = jwtUtil.createToken(userInfo);
             userInfo.setRefreshToken(tokens.getJwtRefreshToken());
 
