@@ -1,0 +1,53 @@
+spring:
+
+  #  datasource:
+  #    url: ${MYSQL_URL}
+  #    username: ${MYSQL_USERNAME}
+  #    password: ${MYSQL_PW}
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
+  #    hikari:
+  #      maximum-pool-size: 30
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    #    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: none
+    generate-ddl: true
+    open-in-view: false
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql: trace
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+
+jwt:
+  secret: ${JWT_SECRET}
+
+cloud:
+  aws:
+    credentials:
+      use-default-aws-credentials-chain: true
+      accessKey: ${AWS_S3_ACCESS_KEY}
+      secretKey: ${AWS_S3_SECRET_KEY}
+    s3:
+      bucket: ${AWS_S3_BUCKET_NAME}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
