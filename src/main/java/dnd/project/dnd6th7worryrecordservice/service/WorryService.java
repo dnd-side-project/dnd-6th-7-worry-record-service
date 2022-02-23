@@ -42,7 +42,10 @@ public class WorryService {
                     meanlessWorryCnt++;
             }
             String meanlessWorryPer = Math.round((meanlessWorryCnt / finishedWorryCnt * 100)) + "%";
+
+            int worryCnt = worryList.size();
             String imgUrl = s3Util.downloadFile(String.valueOf(1));
+
             WorryHomeResponseDto worryResponseDto = new WorryHomeResponseDto(meanlessWorryPer, (short) worryList.size(), imgUrl);
             return worryResponseDto;
         } else {

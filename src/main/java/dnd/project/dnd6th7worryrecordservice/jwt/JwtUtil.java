@@ -13,8 +13,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.springframework.security.config.Elements.JWT;
-import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
+//import static org.springframework.security.config.Elements.JWT;
+//import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
 
 @Slf4j
 public class   JwtUtil {
@@ -41,9 +41,9 @@ public class   JwtUtil {
 
 
         //Header
-        Map<String, Object> header = new HashMap<>();
-        header.put("typ", JWT);
-        header.put("alg", HS256);
+//        Map<String, Object> header = new HashMap<>();
+//        header.put("typ", JWT);
+//        header.put("alg", HS256);
 
         //Body(Claims)
         Map<String, Object> claims = new HashMap<>();
@@ -59,7 +59,7 @@ public class   JwtUtil {
 
         //Signiture
         String token = Jwts.builder()
-                .setHeader(header)
+//                .setHeader(header)
                 .setClaims(claims)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
