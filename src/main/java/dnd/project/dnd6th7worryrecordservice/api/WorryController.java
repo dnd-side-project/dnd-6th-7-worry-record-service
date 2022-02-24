@@ -33,12 +33,14 @@ public class WorryController {
 
     //홈 - 걱정 작성
     @PostMapping("/write")
-    public ResponseEntity addWorry(@RequestBody WorryRequestDto worryRequestDto) {
-        boolean check = worryService.addWorry(worryRequestDto);
-        if (check == true)
-            return new ResponseEntity<>(HttpStatus.OK);
-        else
+    public ResponseEntity<WorryWriteResponseDto> addWorry(@RequestBody WorryRequestDto worryRequestDto) {
+        try {
+            WorryWriteResponseDto worryWriteResponseDto = worryService.addWorry(worryRequestDto);
+            return ResponseEntity.ok(worryWriteResponseDto);
+        }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     //걱정 보관함 - 요즘 걱정
