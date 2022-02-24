@@ -16,6 +16,8 @@ public interface WorryRepository extends JpaRepository<Worry, Long> {
 
     Worry findWorryByWorryId(Long worryId);
 
+
+
     //worries/home && /worries/recent
     List<Worry> findByUserAndWorryStartDateBetween(User user, LocalDateTime fromDate, LocalDateTime toDate);
 
@@ -66,6 +68,4 @@ public interface WorryRepository extends JpaRepository<Worry, Long> {
     @Query("update Worry w set w.worryReview = ?2 where w.worryId = ?1")
     void changeWorryReview(Long worryId, String review);
 
-    @Query("select w from Worry w where w.user = ?1 group by w.user, w.category order by count(w.worryId) desc")
-    List<Worry> findCategory(User user);
 }

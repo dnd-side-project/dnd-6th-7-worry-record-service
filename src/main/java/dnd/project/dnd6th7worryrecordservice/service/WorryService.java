@@ -14,7 +14,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Transactional
@@ -42,29 +41,20 @@ public class WorryService {
                 if (worry.isFinished() == true && worry.isRealized() == false)
                     meanlessWorryCnt++;
             }
+            String meanlessWorryPer = Math.round((meanlessWorryCnt / finishedWorryCnt * 100)) + "%";
 
-            String meanlessWorryPer;
-            if (finishedWorryCnt == 0) {
-                meanlessWorryPer = "100%";
-            } else {
-                meanlessWorryPer = Math.round((meanlessWorryCnt / finishedWorryCnt * 100)) + "%";
-            }
+            int worryCnt = worryList.size();
+            String imgUrl = s3Util.downloadFile(String.valueOf(1));
 
-            int worryCnt = (int) (worryList.size() - finishedWorryCnt);
-
-            String cloudCnt = setCloudCnt(worryCnt);
-            String categoryName = setCategoryName(userId, cloudCnt);
-
-            String imgUrl = s3Util.downloadFile(categoryName + cloudCnt);
-
-            WorryHomeResponseDto worryResponseDto = new WorryHomeResponseDto(meanlessWorryPer, (short) worryCnt, imgUrl);
+            WorryHomeResponseDto worryResponseDto = new WorryHomeResponseDto(meanlessWorryPer, (short) worryList.size(), imgUrl);
             return worryResponseDto;
-        } else
+        } else {
             return null;
+        }
     }
 
     //걱정 작성
-    public WorryWriteResponseDto addWorry(WorryRequestDto worryRequestDto) {
+    public boolean addWorry(WorryRequestDto worryRequestDto) {
         Optional<User> optionalUser = userService.findUserByUserId(worryRequestDto.getUserId());
         if (optionalUser.isPresent()) {
             LocalDateTime time = LocalDateTime.now();
@@ -77,41 +67,36 @@ public class WorryService {
                     .build();
 
             worryRepository.save(worry);
-
-            WorryWriteResponseDto worryWriteResponseDto = WorryWriteResponseDto.builder()
-                    .worryStartDate(time)
-                    .imgUrl(s3Util.downloadFile("worryWriteGIF/write"))
-                    .build();
-
-            return worryWriteResponseDto;
-        } else
-            return null;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //걱정 보관함 - 요즘 걱정
-    public List<WorryResponseDto> findRecentWorry(Long userId) {
+    public List<WorryResponseDto> findRecentWorry(Long userId){
         Optional<User> optionalUser = userService.findUserByUserId(userId);
-        if (optionalUser.isPresent()) {
+        if(optionalUser.isPresent()){
             LocalDateTime time = LocalDateTime.now();
             List<WorryResponseDto> worryDtoList = new ArrayList<>();
 
             List<Worry> worryList = worryRepository.findByUserAndWorryStartDateBetween(optionalUser.get(), time.minusMonths(2), time);
             for (Worry worry : worryList) {
-                if (worry.isFinished() == false) {
+                if(worry.isFinished() == false) {
                     WorryResponseDto responseDto = getWorryResponseDto(worry);
                     worryDtoList.add(responseDto);
                 }
             }
             return worryDtoList;
-        } else {
+        } else{
             return null;
         }
     }
 
     //걱정 보관함 - 요즘 걱정 - 걱정 카테고리 필터링
-    public List<WorryResponseDto> findCategorizedRecentWorry(Long userId, List<Long> categoryId) {
+    public List<WorryResponseDto> findCategorizedRecentWorry(Long userId, List<Long> categoryId){
         Optional<User> optionalUser = userService.findUserByUserId(userId);
-        if (optionalUser.isPresent()) {
+        if(optionalUser.isPresent()){
             LocalDateTime time = LocalDateTime.now();
             List<WorryResponseDto> worryDtoList = new ArrayList<>();
 
@@ -127,7 +112,7 @@ public class WorryService {
                 worryDtoList.add(responseDto);
             }
             return worryDtoList;
-        } else {
+        }else{
             return null;
         }
     }
@@ -306,33 +291,5 @@ public class WorryService {
                 .build();
         return responseDto;
 
-    }
-
-    private String setCategoryName(Long userId, String cloudCnt){
-        if(cloudCnt == "_0" || cloudCnt == "_1" || cloudCnt == "_2" || cloudCnt == "_3")
-            return "기본";
-        else {
-            Optional<User> optionalUser = userService.findUserByUserId(userId);
-            if (optionalUser.isPresent()) {
-                List<Worry> worry = worryRepository.findCategory(optionalUser.get());
-                return worry.get(0).getCategory().getCategoryName();
-            } else
-                return null;
-        }
-    }
-
-    private String setCloudCnt(int worryCnt) {
-        if(worryCnt == 0){
-            return "_0";
-        }else if(worryCnt == 1){
-            return "_1";
-        }else if(worryCnt == 2){
-            return "_2";
-        }else if(worryCnt == 3){
-            return "_3";
-        }else if(worryCnt >= 4 && worryCnt <= 9){
-            return "_4";
-        }else
-            return "_5";
     }
 }
