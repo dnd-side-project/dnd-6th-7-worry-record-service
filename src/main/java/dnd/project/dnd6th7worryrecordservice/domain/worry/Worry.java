@@ -6,7 +6,7 @@ import dnd.project.dnd6th7worryrecordservice.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 @Entity
 public class Worry {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long worryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,14 +33,14 @@ public class Worry {
     @NotNull
     private String worryText;
 
-    @Column(name = "isFinished", columnDefinition = "boolean default false")
+    @Column(name = "isFinished")
     private boolean isFinished;
 
-    @Column(name = "isRealized",  columnDefinition = "boolean default false")
+    @Column(name = "isRealized")
     private boolean isRealized;
 
-    @Column(name = "isLocked", columnDefinition = "boolean default true")
-    private boolean isLocked;
+    @Column(name = "isLocked")
+    private boolean isLocked = true;
 
     @Column(name = "worryStartDate", nullable = false)
     private LocalDateTime worryStartDate;
