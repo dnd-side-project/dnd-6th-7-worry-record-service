@@ -2,8 +2,6 @@ package dnd.project.dnd6th7worryrecordservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -17,30 +15,30 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 //http://localhost:8080/swagger-ui.html#
 
 @Configuration
-@EnableAsync
-@EnableWebMvc
 @EnableSwagger2
 public class SwaggerConfig implements WebMvcConfigurer {
-    private static final String API_NAME = "ParkingService API";
+    private static final String API_NAME = "WorryRecordService API";
     private static final String API_VERSION = "0.0.1";
-    private static final String API_DESCRIPTION = "ParkingService API 명세서";
+    private static final String API_DESCRIPTION = "WorryRecordService API 명세서";
 
-    @Override public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/"); }
 
     @Bean
-    public Docket swagger() {
+    public Docket swagger() {   //Docket == Swagger 설정을 위한 Bean
         return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("dnd.project.dnd6th7worryrecordservice"))
-                .paths(PathSelectors.any())
+                .apiInfo(apiInfo()) //apiInfo 삽입
+                .select() //ApiSelectorBuilder를 생성
+                .apis(RequestHandlerSelectors.basePackage("dnd.project.dnd6th7worryrecordservice")) //API 범위 지정 (해당 패키지 내부에 있는 모든 Request 출력)
+                .paths(PathSelectors.any()) //스웨거 html 페이지에 모든 URL 제공
+                //.paths(PathSelectors.ant("/test/**")) 스웨거 html 페이지에 특정 api만 보여주고 싶다면 해당 부분 설정
                 .build(); }
 
-    public ApiInfo apiInfo() {
+    public ApiInfo apiInfo() {  //ApiInfo 설정
         return new ApiInfoBuilder()
                 .title(API_NAME)
                 .version(API_VERSION)

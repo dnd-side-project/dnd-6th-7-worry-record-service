@@ -1,11 +1,13 @@
 package dnd.project.dnd6th7worryrecordservice.domain.user;
 
-import lombok.Builder;
+import dnd.project.dnd6th7worryrecordservice.domain.worry.Worry;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @NoArgsConstructor
@@ -34,20 +36,19 @@ public class User {
     @Column(name = "imgUrl",nullable = false)
     private String imgUrl;
 
+    @Column(name = "refreshToken", nullable = false)
+    private String refreshToken;
 
-    public User(String username, String email, String kakaoId, Role role, String imgUrl) {
-        Assert.hasText(username, "username must not be empty");
-        Assert.hasText(kakaoId, "kakaoId must not be empty");
-        Assert.hasText(role.name(), "role must not be empty");
-        Assert.hasText(imgUrl, "imgUrl must not be empty");
+    @OneToMany(mappedBy = "user")
+    List<Worry> worryList = new ArrayList<>();
 
+    public User(String username, String email, String kakaoId, Role role, String imgUrl, String refreshToken) {
         this.username = username;
         this.email = email;
         this.kakaoId = kakaoId;
         this.role = role;
         this.imgUrl = imgUrl;
+        this.refreshToken = refreshToken;
     }
-
-
 
 }

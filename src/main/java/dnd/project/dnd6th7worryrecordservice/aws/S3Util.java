@@ -1,10 +1,7 @@
 package dnd.project.dnd6th7worryrecordservice.aws;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -19,12 +16,17 @@ import java.io.InputStream;
 
 @RequiredArgsConstructor
 @Component
-public class S3Uploader {
+public class S3Util {
 
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    public String downloadFile(String fileName){
+        String fileUrl = "homeGIF/" + fileName + ".gif";
+        return amazonS3Client.getUrl(bucket, fileUrl).toString();
+    }
 
     public String uploadFile(MultipartFile multipartFile, String dirName) {
 

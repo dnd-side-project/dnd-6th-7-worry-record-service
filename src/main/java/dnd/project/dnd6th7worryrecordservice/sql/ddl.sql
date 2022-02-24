@@ -5,5 +5,15 @@ email varchar(100) ,
 role varchar(100)  NOT NULL,
 kakaoId varchar(100)  NOT NULL,
 imgUrl varchar(100)  NOT NULL,
+refreshToken varchar(1000),
 primary key(userId)
 );
+
+INSERT INTO CATEGORY VALUES (1,'진로');
+INSERT INTO CATEGORY VALUES (2,'관계');
+INSERT INTO CATEGORY VALUES (3,'직장');
+INSERT INTO CATEGORY VALUES (4,'경제');
+INSERT INTO CATEGORY VALUES (5,'학업');
+INSERT INTO CATEGORY VALUES (6,'가족');
+INSERT INTO CATEGORY VALUES (7,'건강');
+INSERT INTO CATEGORY VALUES (8,'기타');
