@@ -243,6 +243,7 @@ public class WorryService {
             WorryCntResponseDto worryCntResponseDto = WorryCntResponseDto.builder()
                     .worryCnt(worryList.size())
                     .meaningfulWorryCnt(realizedCnt)
+                    .username(user.getUsername())
                     .build();
 
             return worryCntResponseDto;
