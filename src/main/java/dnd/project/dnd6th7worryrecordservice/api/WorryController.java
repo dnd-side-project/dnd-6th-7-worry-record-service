@@ -276,8 +276,8 @@ public class WorryController {
         }
     }
 
-    //걱정 후기 수정 - 후기 내용 수정
-    @ApiOperation(value = "걱정 후기 수정 - 내용 수정", notes = "후기 내용 수정")
+    //걱정 후기 입력/수정 - 내용
+    @ApiOperation(value = "걱정 후기 입력/수정 - 내용", notes = "후기 내용 입력 OR 수정")
     @PatchMapping("/review")
     public ResponseEntity modifyWorryReview(@RequestBody WorryReviewModifyRequestDto worryRequestDto) {
         try {
