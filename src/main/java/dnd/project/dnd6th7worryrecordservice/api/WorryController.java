@@ -208,7 +208,7 @@ public class WorryController {
                     , value = "걱정 실현 여부")
     })
     @PostMapping("/chat/realize")
-    public ResponseEntity inputWorryIsRealized(@RequestParam("userId") Long userId, @RequestParam("worryId") Long worryId, @RequestParam("isRealized") boolean isRealized) {
+    public ResponseEntity<WorryCntResponseDto> inputWorryIsRealized(@RequestParam("userId") Long userId, @RequestParam("worryId") Long worryId, @RequestParam("isRealized") boolean isRealized) {
         try {
             WorryCntResponseDto worryCntResponseDto = worryService.worryChatSetRealized(userId, worryId, isRealized);
             Assert.notNull(worryCntResponseDto);
