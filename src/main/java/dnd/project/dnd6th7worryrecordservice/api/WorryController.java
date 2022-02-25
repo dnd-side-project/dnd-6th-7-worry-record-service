@@ -93,9 +93,9 @@ public class WorryController {
             name = "userId"
             , value = "유저PK")
     @GetMapping("/past")
-    public ResponseEntity<List<WorryResponseDto>> allPastWorryList(@RequestParam("userId") Long userId) {
+    public ResponseEntity<List<WorryPastResponseDto>> allPastWorryList(@RequestParam("userId") Long userId) {
         try {
-            List<WorryResponseDto> worryList = worryService.findWorryByIsFinished(true, userId);
+            List<WorryPastResponseDto> worryList = worryService.findWorryByIsFinished(true, userId);
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
@@ -115,9 +115,9 @@ public class WorryController {
             )
     })
     @GetMapping("/past/filter")
-    public ResponseEntity<List<WorryResponseDto>> categorizedPastWorry(@RequestParam("userId") Long userId, @RequestParam("categories") List<Long> categoryId) {
+    public ResponseEntity<List<WorryPastResponseDto>> categorizedPastWorry(@RequestParam("userId") Long userId, @RequestParam("categories") List<Long> categoryId) {
         try {
-            List<WorryResponseDto> worryList = worryService.findCategorizedPastWorry(userId, categoryId);
+            List<WorryPastResponseDto> worryList = worryService.findCategorizedPastWorry(userId, categoryId);
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
@@ -131,9 +131,9 @@ public class WorryController {
             name = "userId"
             , value = "유저PK")
     @GetMapping("/past/mean")
-    public ResponseEntity<List<WorryResponseDto>> meaningfulWorry(@RequestParam("userId") Long userId) {
+    public ResponseEntity<List<WorryPastResponseDto>> meaningfulWorry(@RequestParam("userId") Long userId) {
         try {
-            List<WorryResponseDto> worryList = worryService.findMeanOrMeanlessWorry(userId, true);
+            List<WorryPastResponseDto> worryList = worryService.findMeanOrMeanlessWorry(userId, true);
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
@@ -147,9 +147,9 @@ public class WorryController {
             name = "userId"
             , value = "유저PK")
     @GetMapping("/past/meanless")
-    public ResponseEntity<List<WorryResponseDto>> meanlessWorry(@RequestParam("userId") Long userId) {
+    public ResponseEntity<List<WorryPastResponseDto>> meanlessWorry(@RequestParam("userId") Long userId) {
         try {
-            List<WorryResponseDto> worryList = worryService.findMeanOrMeanlessWorry(userId, false);
+            List<WorryPastResponseDto> worryList = worryService.findMeanOrMeanlessWorry(userId, false);
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
@@ -171,8 +171,8 @@ public class WorryController {
     //걱정 보관함 - 걱정 삭제
     @ApiOperation(value = "걱정 삭제", notes = "걱정 보관함의 걱정 삭제")
     @ApiImplicitParam(
-            name = "worryId"
-            , value = "걱정PK")
+            name = "worryIds"
+            , value = "걱정PK 리스트")
     @DeleteMapping
     public ResponseEntity removeWorry(@RequestParam("worryIds") List<Long> worryIds) {
         try {
@@ -225,7 +225,8 @@ public class WorryController {
                     name = "worryId"
                     , value = "걱정PK"),
             @ApiImplicitParam(
-                    name = "expiryDate")
+                    name = "expiryDate"
+                    , value = "걱정 만료일")
     })
     @PutMapping("/review/date")
     public ResponseEntity changeWorryExpiryDate(@RequestParam("worryId") Long worryId, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @RequestParam("expiryDate") LocalDateTime expiryDate) {

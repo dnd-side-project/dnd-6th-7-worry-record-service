@@ -133,14 +133,14 @@ public class WorryService {
     }
 
     //걱정 보관함 - 지난 걱정
-    public List<WorryResponseDto> findWorryByIsFinished(boolean isFinished, Long userId) {
+    public List<WorryPastResponseDto> findWorryByIsFinished(boolean isFinished, Long userId) {
         Optional<User> user = userService.findUserByUserId(userId);
         if (isFinished == true && user.isPresent()) {
-            List<WorryResponseDto> worryDtoList = new ArrayList<>();
+            List<WorryPastResponseDto> worryDtoList = new ArrayList<>();
 
             List<Worry> worryList = worryRepository.findByIsFinishedAndUserOrderByWorryStartDateAsc(isFinished, user.get());
             for (Worry worry : worryList) {
-                WorryResponseDto responseDto = getWorryResponseDto(worry);
+                WorryPastResponseDto responseDto = getWorryPastResponseDto(worry);
                 worryDtoList.add(responseDto);
             }
             return worryDtoList;
@@ -151,7 +151,7 @@ public class WorryService {
 
 
     //걱정 보관함 - 지난 걱정 - 걱정 카테고리 필터링
-    public List<WorryResponseDto> findCategorizedPastWorry(Long userId, List<Long> categoryId) {
+    public List<WorryPastResponseDto> findCategorizedPastWorry(Long userId, List<Long> categoryId) {
 
         Optional<User> user = userService.findUserByUserId(userId);
         if (user.isPresent()) {
@@ -162,10 +162,10 @@ public class WorryService {
             }
 
             List<Worry> worryList = worryRepository.findByUserAndIsFinishedAndCategoryInOrderByWorryStartDateAsc(user.get(), true, categoryList);
-            List<WorryResponseDto> worryDtoList = new ArrayList<>();
+            List<WorryPastResponseDto> worryDtoList = new ArrayList<>();
 
             for (Worry worry : worryList) {
-                WorryResponseDto responseDto = getWorryResponseDto(worry);
+                WorryPastResponseDto responseDto = getWorryPastResponseDto(worry);
                 worryDtoList.add(responseDto);
             }
 
@@ -176,15 +176,15 @@ public class WorryService {
     }
 
     //걱정 보관함 - 지난 걱정 - 의미 있는 걱정/의미 없는 걱정
-    public List<WorryResponseDto> findMeanOrMeanlessWorry(Long userId, boolean isRealized) {
+    public List<WorryPastResponseDto> findMeanOrMeanlessWorry(Long userId, boolean isRealized) {
         Optional<User> user = userService.findUserByUserId(userId);
         if (user.isPresent()) {
 
             List<Worry> worryList = worryRepository.findByUserAndIsFinishedAndIsRealizedOrderByWorryStartDateAsc(user.get(), true, isRealized);
-            List<WorryResponseDto> worryDtoList = new ArrayList<>();
+            List<WorryPastResponseDto> worryDtoList = new ArrayList<>();
 
             for (Worry worry : worryList) {
-                WorryResponseDto responseDto = getWorryResponseDto(worry);
+                WorryPastResponseDto responseDto = getWorryPastResponseDto(worry);
                 worryDtoList.add(responseDto);
             }
 
@@ -306,6 +306,21 @@ public class WorryService {
                 .isFinished(worry.isFinished())
                 .isLocked(worry.isLocked())
                 .category(worry.getCategory())
+                .build();
+        return responseDto;
+
+    }
+
+    private WorryPastResponseDto getWorryPastResponseDto(Worry worry) {
+        WorryPastResponseDto responseDto = WorryPastResponseDto.builder()
+                .worryId(worry.getWorryId())
+                .worryStartDate(worry.getWorryStartDate())
+                .worryExpiryDate(worry.getWorryExpiryDate())
+                .isRealized(worry.isRealized())
+                .isFinished(worry.isFinished())
+                .isLocked(worry.isLocked())
+                .category(worry.getCategory())
+                .worryReview(worry.getWorryReview())
                 .build();
         return responseDto;
 
