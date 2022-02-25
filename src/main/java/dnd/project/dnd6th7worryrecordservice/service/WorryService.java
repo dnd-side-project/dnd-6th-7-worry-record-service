@@ -218,6 +218,7 @@ public class WorryService {
                 .worryStartDate(worry.getWorryStartDate())
                 .categoryName(worry.getCategory().getCategoryName())
                 .worryText(worry.getWorryText())
+                .username(worry.getUser().getUsername())
                 .build();
 
         return worryChatResponseDto;
@@ -225,11 +226,13 @@ public class WorryService {
 
     //걱정 후기 채팅방 - 걱정 실현 여부 입력
     public WorryCntResponseDto worryChatSetRealized(Long userId, Long worryId, boolean isRealized) {
-        worryRepository.setIsRealized(worryId, isRealized);
-        worryRepository.setIsFinished(worryId, true);
         Optional<User> optionalUser = userService.findUserByUserId(userId);
 
         if (optionalUser.isPresent()) {
+            worryRepository.setIsRealized(worryId, isRealized);
+            worryRepository.setIsFinished(worryId, true);
+            Worry worry = worryRepository.findWorryByWorryId(worryId);
+
             User user = optionalUser.get();
             LocalDateTime time = LocalDateTime.now();
 
@@ -246,6 +249,8 @@ public class WorryService {
                     .worryCnt(worryList.size())
                     .meaningfulWorryCnt(realizedCnt)
                     .username(user.getUsername())
+                    .categoryName(worry.getCategory().getCategoryName())
+                    .worryStartDate(worry.getWorryStartDate())
                     .build();
 
             return worryCntResponseDto;

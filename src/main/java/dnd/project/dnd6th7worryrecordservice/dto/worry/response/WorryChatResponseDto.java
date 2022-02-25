@@ -15,12 +15,14 @@ public class WorryChatResponseDto {
     private LocalDateTime worryStartDate;
     private String categoryName;
     private String worryText;
+    private String username;
 
 
     @Builder
-    public WorryChatResponseDto(LocalDateTime worryStartDate, String categoryName, String worryText) {
+    public WorryChatResponseDto(LocalDateTime worryStartDate, String categoryName, String worryText, String username) {
         this.worryStartDate = worryStartDate;
         this.categoryName = categoryName;
         this.worryText = worryText;
+        this.username = username;
     }
 }
