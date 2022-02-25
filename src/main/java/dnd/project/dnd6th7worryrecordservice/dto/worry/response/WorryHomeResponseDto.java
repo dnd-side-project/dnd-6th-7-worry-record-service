@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class WorryHomeResponseDto {
-    private String meanlessWorryPer;
+    private short meanlessWorryPer;
     private short recentWorryCnt;
     private String imgUrl;
 }
