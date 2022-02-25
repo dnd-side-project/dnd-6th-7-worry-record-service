@@ -43,7 +43,7 @@ public class WorryController {
         try {
             WorryWriteResponseDto worryWriteResponseDto = worryService.addWorry(worryRequestDto);
             return ResponseEntity.ok(worryWriteResponseDto);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -173,10 +173,10 @@ public class WorryController {
     @ApiImplicitParam(
             name = "worryId"
             , value = "걱정PK")
-    @DeleteMapping("/{worryId}")
-    public ResponseEntity removeWorry(@PathVariable Long worryId) {
+    @DeleteMapping
+    public ResponseEntity removeWorry(@RequestParam("worryIds") List<Long> worryIds) {
         try {
-            worryService.deleteWorry(worryId);
+            worryService.deleteWorry(worryIds);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
