@@ -43,11 +43,11 @@ public class WorryService {
                     meanlessWorryCnt++;
             }
 
-            String meanlessWorryPer;
+            short meanlessWorryPer;
             if (finishedWorryCnt == 0) {
-                meanlessWorryPer = "100%";
+                meanlessWorryPer = 100;
             } else {
-                meanlessWorryPer = Math.round((meanlessWorryCnt / finishedWorryCnt * 100)) + "%";
+                meanlessWorryPer = (short) Math.round((meanlessWorryCnt / finishedWorryCnt * 100));
             }
 
             int worryCnt = (int) (worryList.size() - finishedWorryCnt);
