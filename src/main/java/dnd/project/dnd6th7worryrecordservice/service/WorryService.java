@@ -204,9 +204,11 @@ public class WorryService {
     }
 
     //걱정 보관함 - 걱정 삭제
-    public void deleteWorry(Long worryId) {
-        Worry worry = worryRepository.findWorryByWorryId(worryId);
-        worryRepository.delete(worry);
+    public void deleteWorry(List<Long> worryIds) {
+        for (Long worryId : worryIds) {
+            Worry worry = worryRepository.findWorryByWorryId(worryId);
+            worryRepository.delete(worry);
+        }
     }
 
     //걱정 후기 채팅방 - 열기
@@ -309,8 +311,8 @@ public class WorryService {
 
     }
 
-    private String setCategoryName(Long userId, String cloudCnt){
-        if(cloudCnt == "_0" || cloudCnt == "_1" || cloudCnt == "_2" || cloudCnt == "_3")
+    private String setCategoryName(Long userId, String cloudCnt) {
+        if (cloudCnt == "_0" || cloudCnt == "_1" || cloudCnt == "_2" || cloudCnt == "_3")
             return "기본";
         else {
             Optional<User> optionalUser = userService.findUserByUserId(userId);
@@ -323,17 +325,17 @@ public class WorryService {
     }
 
     private String setCloudCnt(int worryCnt) {
-        if(worryCnt == 0){
+        if (worryCnt == 0) {
             return "_0";
-        }else if(worryCnt == 1){
+        } else if (worryCnt == 1) {
             return "_1";
-        }else if(worryCnt == 2){
+        } else if (worryCnt == 2) {
             return "_2";
-        }else if(worryCnt == 3){
+        } else if (worryCnt == 3) {
             return "_3";
-        }else if(worryCnt >= 4 && worryCnt <= 9){
+        } else if (worryCnt >= 4 && worryCnt <= 9) {
             return "_4";
-        }else
+        } else
             return "_5";
     }
 }
