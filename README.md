@@ -6,7 +6,7 @@
 <br>
 
 <p align="center">
-  <img width="250" height="250" src="https://user-images.githubusercontent.com/84304802/155870606-95bd66c5-a38d-4c29-932c-4b2b6f4dc5dd.png" alt="이미지 준비중">
+  <img width="512" height="512" src="https://user-images.githubusercontent.com/84304802/155870606-95bd66c5-a38d-4c29-932c-4b2b6f4dc5dd.png" alt="이미지 준비중">
 </p>
 
 
