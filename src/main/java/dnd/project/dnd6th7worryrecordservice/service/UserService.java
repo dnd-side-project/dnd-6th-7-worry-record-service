@@ -44,6 +44,10 @@ public class UserService {
         userRepository.updateUserByKakaoId(userInfo.getUsername(), userInfo.getEmail(), userInfo.getImgURL(), userInfo.getRefreshToken(), userInfo.getDeviceToken() ,userInfo.getKakaoId());
     }
 
+    public void updateDeviceToken(String deviceToken, Long userId){
+        userRepository.updateDeviceTokenByUserId(deviceToken, userId);
+    }
+
     public String findRefreshTokenByKakaoId(String kakaoId){
         return userRepository.findRefreshTokenByKakaoId(kakaoId);
     }

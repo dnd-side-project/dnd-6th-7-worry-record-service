@@ -1,15 +1,14 @@
 package dnd.project.dnd6th7worryrecordservice.api;
 
 import dnd.project.dnd6th7worryrecordservice.domain.user.User;
+import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.user.UserResponseDto;
-import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import dnd.project.dnd6th7worryrecordservice.jwt.JwtUtil;
 import dnd.project.dnd6th7worryrecordservice.service.KakaoService;
 import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +62,25 @@ public class AuthController {
             return ResponseEntity.ok(userResponseDto);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @ApiOperation(value = "FCM서버 디바이스 토큰 갱신", notes = "새로 발급된 DeviceToken을 DB에 저장한다")
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "userId"
+                    , value = "유저PK"),
+            @ApiImplicitParam(
+                    name = "deviceToken"
+                    , value = "FCM서버에서 전송 받는 푸쉬알림을 위한 토큰")
+    })
+    @PutMapping(value = "/refresh")
+    public ResponseEntity<?> refreshDeviceToken(@RequestParam("userId") Long userId, @RequestParam("deviceToken") String deviceToken){
+        try {
+            userService.updateDeviceToken(deviceToken, userId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
