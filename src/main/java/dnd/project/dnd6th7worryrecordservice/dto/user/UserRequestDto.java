@@ -17,6 +17,7 @@ public class UserRequestDto {
     private String kakaoId;
     private String imgURL;
     private String refreshToken;
+    private String deviceToken;
 
     public UserRequestDto(String username, String email, String kakaoId, String imgURL, String refreshToken) {
         this.username = username;
@@ -36,7 +37,7 @@ public class UserRequestDto {
 
     //UserRequestDto를 User Entity로 변환하여 return
     public User toEntity(){
-        User user = new User(this.username, this.email, this.kakaoId, Role.USER, this.imgURL, this.refreshToken);
+        User user = new User(this.username, this.email, this.kakaoId, Role.USER, this.imgURL, this.refreshToken, this.deviceToken);
         return user;
     }
 
