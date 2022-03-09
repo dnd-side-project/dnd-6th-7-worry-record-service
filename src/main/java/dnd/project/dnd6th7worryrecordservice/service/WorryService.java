@@ -344,6 +344,10 @@ public class WorryService {
         }
     }
 
+    public List<Worry> findWorryByUser(User user){
+        return worryRepository.findByUser(user);
+    }
+
     private String setCloudCnt(int worryCnt) {
         if (worryCnt == 0) {
             return "_0";
