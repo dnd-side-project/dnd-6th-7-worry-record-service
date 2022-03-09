@@ -16,6 +16,8 @@ public interface WorryRepository extends JpaRepository<Worry, Long> {
 
     Worry findWorryByWorryId(Long worryId);
 
+    List<Worry> findByUser(User user);
+
     //worries/home && /worries/recent
     List<Worry> findByUserAndWorryStartDateBetween(User user, LocalDateTime fromDate, LocalDateTime toDate);
 
