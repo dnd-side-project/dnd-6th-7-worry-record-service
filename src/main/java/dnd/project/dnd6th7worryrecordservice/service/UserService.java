@@ -6,6 +6,7 @@ import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -25,6 +26,10 @@ public class UserService {
         }
     }
 
+    public List<User> findAllUser(){
+        return userRepository.findAll();
+    }
+
     public Optional<User> findUserByUserId(Long userId){
         Optional<User> user = userRepository.findByUserId(userId);
         return user;
@@ -36,7 +41,7 @@ public class UserService {
     }
 
     public void updateUserByKakaoId(UserRequestDto userInfo){
-        userRepository.updateUserByKakaoId(userInfo.getUsername(), userInfo.getEmail(), userInfo.getImgURL(), userInfo.getRefreshToken(), userInfo.getKakaoId());
+        userRepository.updateUserByKakaoId(userInfo.getUsername(), userInfo.getEmail(), userInfo.getImgURL(), userInfo.getRefreshToken(), userInfo.getDeviceToken() ,userInfo.getKakaoId());
     }
 
     public String findRefreshTokenByKakaoId(String kakaoId){

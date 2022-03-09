@@ -13,6 +13,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
@@ -30,19 +31,25 @@ public class AuthController {
             @ApiResponse(code = 404, message = "No param")
             //Other Http Status code..
     })
-    @ApiImplicitParam(
-            name = "token"
-            , value = "카카오 엑세스 토큰"
-            , defaultValue = "None")
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "token"
+                    , value = "카카오 엑세스 토큰"),
+            @ApiImplicitParam(
+                    name = "deviceToken"
+                    , value = "FCM서버에서 전송 받는 푸쉬알림을 위한 토큰")
+    })
     @PostMapping(value = "/kakao")
-    public ResponseEntity<UserResponseDto> giveToken(@RequestParam("token") String accessToken, HttpServletResponse res) {
+    public ResponseEntity<UserResponseDto> login(@RequestParam("token") String accessToken, @RequestParam("deviceToken") String deviceToken, HttpServletResponse res) {
         System.out.println("accessToken = " + accessToken);
         UserRequestDto userInfo = kakaoService.getUserInfo(accessToken);   //accessToken으로 유저정보 받아오기
+        userInfo.setDeviceToken(deviceToken);   //userInfo에 deviceToken 추가
         if (userInfo.getKakaoId() != null) {
             TokenDto tokens = jwtUtil.createToken(userInfo);
             userInfo.setRefreshToken(tokens.getJwtRefreshToken());
 
             //kakaoId 기준으로 DB select하여 User 데이터가 없으면 Insert, 있으면 Update
+
             userService.insertOrUpdateUser(userInfo);
 
             Optional<User> userByKakaoId = userService.findUserByKakaoId(userInfo.getKakaoId());
