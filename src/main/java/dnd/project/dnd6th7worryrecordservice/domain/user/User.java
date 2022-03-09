@@ -1,9 +1,13 @@
 package dnd.project.dnd6th7worryrecordservice.domain.user;
 
+import dnd.project.dnd6th7worryrecordservice.domain.worry.Worry;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @NoArgsConstructor
@@ -35,14 +39,20 @@ public class User {
     @Column(name = "refreshToken", nullable = false)
     private String refreshToken;
 
+    @Column(name = "deviceToken", nullable = false)
+    private String deviceToken;
 
-    public User(String username, String email, String kakaoId, Role role, String imgUrl, String refreshToken) {
+    @OneToMany(mappedBy = "user")
+    List<Worry> worryList = new ArrayList<>();
+
+    public User(String username, String email, String kakaoId, Role role, String imgUrl, String refreshToken, String deviceToken) {
         this.username = username;
         this.email = email;
         this.kakaoId = kakaoId;
         this.role = role;
         this.imgUrl = imgUrl;
         this.refreshToken = refreshToken;
+        this.deviceToken = deviceToken;
     }
 
 }

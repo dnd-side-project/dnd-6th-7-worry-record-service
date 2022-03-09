@@ -4,6 +4,8 @@ import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
@@ -11,9 +13,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.springframework.security.config.Elements.JWT;
-import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
+//import static org.springframework.security.config.Elements.JWT;
+//import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
 
+@Slf4j
 public class   JwtUtil {
     private SecretKey key;
     private Date now = new Date();
@@ -38,9 +41,9 @@ public class   JwtUtil {
 
 
         //Header
-        Map<String, Object> header = new HashMap<>();
-        header.put("typ", JWT);
-        header.put("alg", HS256);
+//        Map<String, Object> header = new HashMap<>();
+//        header.put("typ", JWT);
+//        header.put("alg", HS256);
 
         //Body(Claims)
         Map<String, Object> claims = new HashMap<>();
@@ -56,7 +59,7 @@ public class   JwtUtil {
 
         //Signiture
         String token = Jwts.builder()
-                .setHeader(header)
+//                .setHeader(header)
                 .setClaims(claims)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -78,9 +81,18 @@ public class   JwtUtil {
             System.out.println(jws.getBody().getSubject());
 
             return true;
-        } catch (JwtException e) {
-            return false;   //유효하지 않은 Token일 경우 응답으로 false를 return
+        } catch (SignatureException ex) {
+            log.error("Invalid JWT signature");
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string is empty.");
         }
+        return false;
     }
 
     public String decodePayload(String token) {
