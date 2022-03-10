@@ -39,22 +39,21 @@ public class AuthController {
                     , value = "FCM서버에서 전송 받는 푸쉬알림을 위한 토큰")
     })
     @PostMapping(value = "/kakao")
-    public ResponseEntity<UserResponseDto> login(@RequestParam("token") String accessToken, @RequestParam("deviceToken") String deviceToken, HttpServletResponse res) {
+    public ResponseEntity<UserResponseDto> login(@RequestHeader("accessToken") String accessToken, @RequestParam("deviceToken") String deviceToken, HttpServletResponse res) {
         System.out.println("accessToken = " + accessToken);
         UserRequestDto userInfo = kakaoService.getUserInfo(accessToken);   //accessToken으로 유저정보 받아오기
         userInfo.setDeviceToken(deviceToken);   //userInfo에 deviceToken 추가
-        if (userInfo.getKakaoId() != null) {
+        if (userInfo.getSocialId() != null) {
             TokenDto tokens = jwtUtil.createToken(userInfo);
             userInfo.setRefreshToken(tokens.getJwtRefreshToken());
 
-            //kakaoId 기준으로 DB select하여 User 데이터가 없으면 Insert, 있으면 Update
-
+            //socialId 기준으로 DB select하여 User 데이터가 없으면 Insert, 있으면 Update
             userService.insertOrUpdateUser(userInfo);
 
-            Optional<User> userByKakaoId = userService.findUserByKakaoId(userInfo.getKakaoId());
+            Optional<User> userBySocialData = userService.findUserBySocialData(userInfo.getSocialId(), userInfo.getSocialType());
 
             //UserResponseDto에 userId 추가
-            UserResponseDto userResponseDto = new UserResponseDto(userByKakaoId.get().getUserId(), userInfo.getUsername(), userInfo.getEmail(), userInfo.getImgURL());
+            UserResponseDto userResponseDto = new UserResponseDto(userBySocialData.get().getUserId(), userInfo.getUsername(), userInfo.getEmail(), userInfo.getImgURL());
 
             res.addHeader("at-jwt-access-token", tokens.getJwtAccessToken());
             res.addHeader("at-jwt-refresh-token", tokens.getJwtRefreshToken());

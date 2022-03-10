@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.jsonwebtoken.SignatureAlgorithm.HS256;
+
 //import static org.springframework.security.config.Elements.JWT;
 //import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
 
@@ -27,9 +29,9 @@ public class   JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public TokenDto createToken(UserRequestDto userRequestDto) {
+    public TokenDto createToken(UserRequestDto userInfo) {
 
-        String accessToken = createJws(accessTokenExpMin, userRequestDto);
+        String accessToken = createJws(accessTokenExpMin, userInfo);
         String refreshToken = createJws(refreshTokenExpMin, null);
 
         TokenDto tokens = new TokenDto(accessToken, refreshToken);
@@ -37,7 +39,7 @@ public class   JwtUtil {
         return tokens;
     }
 
-    private String createJws(Integer expMin, UserRequestDto userRequestDto) {
+    private String createJws(Integer expMin, UserRequestDto userInfo) {
 
 
         //Header
@@ -50,18 +52,19 @@ public class   JwtUtil {
         claims.put("iss", "worryrecord");
         claims.put("issueAt", now);
         claims.put("exp", new Date(System.currentTimeMillis() + 1000 * 60 * expMin));
-        if (userRequestDto != null) {
-            claims.put("kakaoId", userRequestDto.getKakaoId());
-            claims.put("username", userRequestDto.getUsername());
-            claims.put("email", userRequestDto.getEmail());
-            claims.put("imgURL", userRequestDto.getImgURL());
+        if (userInfo != null) {
+            claims.put("socialId", userInfo.getSocialId());
+            claims.put("socialType", userInfo.getSocialType());
+            claims.put("username", userInfo.getUsername());
+            claims.put("email", userInfo.getEmail());
+            claims.put("imgURL", userInfo.getImgURL());
         }
 
         //Signiture
         String token = Jwts.builder()
 //                .setHeader(header)
                 .setClaims(claims)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(key, HS256)
                 .compact();
 
         return token;
