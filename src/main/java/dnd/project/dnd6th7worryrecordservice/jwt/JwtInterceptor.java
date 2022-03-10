@@ -59,7 +59,7 @@ public class JwtInterceptor implements HandlerInterceptor {
                 JwtPayloadDto jwtPayload = gson.fromJson(accessTokenPayload, JwtPayloadDto.class);
 
                 //Compare RefreshToken in DB with RefreshToken in HTTP header
-                String refreshTokenInDB = userService.findRefreshTokenByKakaoId(jwtPayload.getKakaoId());
+                String refreshTokenInDB = userService.findRefreshTokenBySocialData(jwtPayload.getSocialId(), jwtPayload.getSocialType());
 
                 if(refreshTokenInDB.equals(atJwtRefreshToken)){
                     //Create new AccessToken and addHeader
