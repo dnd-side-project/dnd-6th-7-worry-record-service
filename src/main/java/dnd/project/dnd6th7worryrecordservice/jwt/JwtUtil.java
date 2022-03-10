@@ -4,6 +4,8 @@ import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
@@ -11,9 +13,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.springframework.security.config.Elements.JWT;
-import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
+import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 
+//import static org.springframework.security.config.Elements.JWT;
+//import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
+
+@Slf4j
 public class   JwtUtil {
     private SecretKey key;
     private Date now = new Date();
@@ -24,9 +29,9 @@ public class   JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public TokenDto createToken(UserRequestDto userRequestDto) {
+    public TokenDto createToken(UserRequestDto userInfo) {
 
-        String accessToken = createJws(accessTokenExpMin, userRequestDto);
+        String accessToken = createJws(accessTokenExpMin, userInfo);
         String refreshToken = createJws(refreshTokenExpMin, null);
 
         TokenDto tokens = new TokenDto(accessToken, refreshToken);
@@ -34,31 +39,32 @@ public class   JwtUtil {
         return tokens;
     }
 
-    private String createJws(Integer expMin, UserRequestDto userRequestDto) {
+    private String createJws(Integer expMin, UserRequestDto userInfo) {
 
 
         //Header
-        Map<String, Object> header = new HashMap<>();
-        header.put("typ", JWT);
-        header.put("alg", HS256);
+//        Map<String, Object> header = new HashMap<>();
+//        header.put("typ", JWT);
+//        header.put("alg", HS256);
 
         //Body(Claims)
         Map<String, Object> claims = new HashMap<>();
         claims.put("iss", "worryrecord");
         claims.put("issueAt", now);
         claims.put("exp", new Date(System.currentTimeMillis() + 1000 * 60 * expMin));
-        if (userRequestDto != null) {
-            claims.put("kakaoId", userRequestDto.getKakaoId());
-            claims.put("username", userRequestDto.getUsername());
-            claims.put("email", userRequestDto.getEmail());
-            claims.put("imgURL", userRequestDto.getImgURL());
+        if (userInfo != null) {
+            claims.put("socialId", userInfo.getSocialId());
+            claims.put("socialType", userInfo.getSocialType());
+            claims.put("username", userInfo.getUsername());
+            claims.put("email", userInfo.getEmail());
+            claims.put("imgURL", userInfo.getImgURL());
         }
 
         //Signiture
         String token = Jwts.builder()
-                .setHeader(header)
+//                .setHeader(header)
                 .setClaims(claims)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(key, HS256)
                 .compact();
 
         return token;
@@ -78,9 +84,18 @@ public class   JwtUtil {
             System.out.println(jws.getBody().getSubject());
 
             return true;
-        } catch (JwtException e) {
-            return false;   //유효하지 않은 Token일 경우 응답으로 false를 return
+        } catch (SignatureException ex) {
+            log.error("Invalid JWT signature");
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string is empty.");
         }
+        return false;
     }
 
     public String decodePayload(String token) {

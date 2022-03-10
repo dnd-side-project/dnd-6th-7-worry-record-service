@@ -1,9 +1,13 @@
 package dnd.project.dnd6th7worryrecordservice.domain.user;
 
+import dnd.project.dnd6th7worryrecordservice.domain.worry.Worry;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @NoArgsConstructor
@@ -26,8 +30,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(name = "kakaoId",nullable = false)
-    private String kakaoId;
+    @Column(name = "socialId",nullable = false)
+    private String socialId;
+
+    @Column(name = "socialType", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
 
     @Column(name = "imgUrl",nullable = false)
     private String imgUrl;
@@ -35,14 +43,21 @@ public class User {
     @Column(name = "refreshToken", nullable = false)
     private String refreshToken;
 
+    @Column(name = "deviceToken", nullable = false)
+    private String deviceToken;
 
-    public User(String username, String email, String kakaoId, Role role, String imgUrl, String refreshToken) {
+    @OneToMany(mappedBy = "user")
+    List<Worry> worryList = new ArrayList<>();
+
+    public User(String username, String email, String socialId, Role role, String imgUrl, String refreshToken, String deviceToken, SocialType socialType) {
         this.username = username;
         this.email = email;
-        this.kakaoId = kakaoId;
+        this.socialId = socialId;
         this.role = role;
         this.imgUrl = imgUrl;
         this.refreshToken = refreshToken;
+        this.deviceToken = deviceToken;
+        this.socialType = socialType;
     }
 
 }
