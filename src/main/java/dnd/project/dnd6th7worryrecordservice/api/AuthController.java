@@ -24,12 +24,7 @@ public class AuthController {
     private final KakaoService kakaoService;
     private final UserService userService;
 
-    @ApiOperation(value = "토큰 발급", notes = "JWT AccessToken, RefreshToken 을 발급한다")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "No param")
-            //Other Http Status code..
-    })
+    @ApiOperation(value = "카카오 로그인", notes = "카카오 계정으로 로그인 후 ResponeHeader로 JWT AccessToken, RefreshToken 을 발급한다")
     @ApiImplicitParams({
             @ApiImplicitParam(
                     name = "token"
@@ -40,7 +35,7 @@ public class AuthController {
     })
     @PostMapping(value = "/kakao")
     //Token값 헤더로 받도록 변경 필요
-    public ResponseEntity<UserResponseDto> login(@RequestParam("token") String accessToken, @RequestParam("deviceToken") String deviceToken, HttpServletResponse res) {
+    public ResponseEntity<UserResponseDto> kakaoLogin(@RequestParam("token") String accessToken, @RequestParam("deviceToken") String deviceToken, HttpServletResponse res) {
         System.out.println("accessToken = " + accessToken);
         UserRequestDto userInfo = kakaoService.getUserInfo(accessToken);   //accessToken으로 유저정보 받아오기
         userInfo.setDeviceToken(deviceToken);   //userInfo에 deviceToken 추가
@@ -63,6 +58,12 @@ public class AuthController {
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @ApiOperation(value = "애플 로그인", notes = "애플 계정으로 로그인 후 ResponeHeader로 JWT AccessToken, RefreshToken 을 발급한다")
+    @PostMapping(value = "/apple")
+    public ResponseEntity<UserResponseDto> appleLogin(@RequestParam("token") String accessToken, @RequestParam("deviceToken") String deviceToken, HttpServletResponse res){
+
     }
 
     @ApiOperation(value = "FCM서버 디바이스 토큰 갱신", notes = "새로 발급된 DeviceToken을 DB에 저장한다")
