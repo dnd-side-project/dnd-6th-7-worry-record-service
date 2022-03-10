@@ -39,7 +39,8 @@ public class AuthController {
                     , value = "FCM서버에서 전송 받는 푸쉬알림을 위한 토큰")
     })
     @PostMapping(value = "/kakao")
-    public ResponseEntity<UserResponseDto> login(@RequestHeader("accessToken") String accessToken, @RequestParam("deviceToken") String deviceToken, HttpServletResponse res) {
+    //Token값 헤더로 받도록 변경 필요
+    public ResponseEntity<UserResponseDto> login(@RequestParam("token") String accessToken, @RequestParam("deviceToken") String deviceToken, HttpServletResponse res) {
         System.out.println("accessToken = " + accessToken);
         UserRequestDto userInfo = kakaoService.getUserInfo(accessToken);   //accessToken으로 유저정보 받아오기
         userInfo.setDeviceToken(deviceToken);   //userInfo에 deviceToken 추가
