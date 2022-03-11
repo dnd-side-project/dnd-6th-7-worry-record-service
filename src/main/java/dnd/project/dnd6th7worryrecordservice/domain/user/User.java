@@ -37,7 +37,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
-    @Column(name = "imgUrl",nullable = false)
+    @Column(name = "imgUrl",nullable = true)
     private String imgUrl;
 
     @Column(name = "refreshToken", nullable = false)

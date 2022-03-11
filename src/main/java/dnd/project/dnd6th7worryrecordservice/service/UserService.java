@@ -3,7 +3,7 @@ package dnd.project.dnd6th7worryrecordservice.service;
 import dnd.project.dnd6th7worryrecordservice.domain.user.SocialType;
 import dnd.project.dnd6th7worryrecordservice.domain.user.User;
 import dnd.project.dnd6th7worryrecordservice.domain.user.UserRepository;
-import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -16,15 +16,15 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public void insertOrUpdateUser(UserRequestDto userRequestDto) {
-        String socialId = userRequestDto.getSocialId();
-        SocialType socialType = userRequestDto.getSocialType();
+    public void insertOrUpdateUser(UserInfoDto userInfoDto) {
+        String socialId = userInfoDto.getSocialId();
+        SocialType socialType = userInfoDto.getSocialType();
         //처음 로그인 하는 유저면 DB에 insert
         if(!findUserBySocialData(socialId, socialType).isPresent()){
-            User user = userRequestDto.toEntity(); //기본 Role = ROLE.USER
+            User user = userInfoDto.toEntity(); //기본 Role = ROLE.USER
             userRepository.save(user);
         }else{ //이미 로그인 했던 유저라면 DB update
-            updateUserBySocialData(userRequestDto);
+            updateUserBySocialData(userInfoDto);
         }
     }
 
@@ -42,7 +42,7 @@ public class UserService {
         return user;
     }
 
-    public void updateUserBySocialData(UserRequestDto userInfo){
+    public void updateUserBySocialData(UserInfoDto userInfo){
         userRepository.updateUserBySocialIdAndSocialType(userInfo.getUsername(), userInfo.getEmail(), userInfo.getImgURL(), userInfo.getRefreshToken(), userInfo.getDeviceToken() ,userInfo.getSocialId(), userInfo.getSocialType());
     }
 

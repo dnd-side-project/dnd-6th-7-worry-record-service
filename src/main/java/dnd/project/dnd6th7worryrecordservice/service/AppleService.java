@@ -1,6 +1,8 @@
 package dnd.project.dnd6th7worryrecordservice.service;
 
 import com.google.gson.*;
+import dnd.project.dnd6th7worryrecordservice.domain.user.SocialType;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserInfoDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +30,9 @@ public class AppleService {
      * 2. 내가 클라에서 가져온 token String과 비교해서 써야할 공개키 확인 (kid,alg 값 같은 것)
      * 3. 그 공개키 재료들로 공개키 만들고, 이 공개키로 JWT토큰 부분의 바디 부분의 decode하면 유저 정보
      */
-    public String userIdFromApple(String idToken) {
+    public UserInfoDto getUserInfo(String idToken) {
         StringBuffer result = new StringBuffer();
+        UserInfoDto userInfoDto = new UserInfoDto();
         try {
             URL url = new URL("https://appleid.apple.com/auth/keys");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -81,10 +84,19 @@ public class AppleService {
 
         Claims userInfo = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(idToken).getBody();
         JsonObject userInfoObject = (JsonObject) parser.parse(new Gson().toJson(userInfo));
-        JsonElement appleAlg = userInfoObject.get("sub");
-        String userId = appleAlg.getAsString();
+        System.out.println("userInfoObject = " + userInfoObject);
+        JsonObject userData = userInfoObject.getAsJsonObject().get("user").getAsJsonObject();
+        String socialId = userData.getAsJsonObject("socialId").getAsString();
+        String email = userData.getAsJsonObject("email").getAsString();
+        String username = userData.getAsJsonObject("fullname").getAsString();
 
-        return userId;
+        userInfoDto.setUsername(username);
+        userInfoDto.setEmail(email);
+        userInfoDto.setSocialId(socialId);
+        userInfoDto.setImgURL(null);
+        userInfoDto.setSocialType(SocialType.APPLE);
+
+        return userInfoDto;
     }
 
     public PublicKey getPublicKey(JsonObject object) {

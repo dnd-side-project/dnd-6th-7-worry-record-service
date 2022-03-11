@@ -1,6 +1,6 @@
 package dnd.project.dnd6th7worryrecordservice.jwt;
 
-import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserInfoDto;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -29,7 +29,7 @@ public class   JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public TokenDto createToken(UserRequestDto userInfo) {
+    public TokenDto createToken(UserInfoDto userInfo) {
 
         String accessToken = createJws(accessTokenExpMin, userInfo);
         String refreshToken = createJws(refreshTokenExpMin, null);
@@ -39,7 +39,7 @@ public class   JwtUtil {
         return tokens;
     }
 
-    private String createJws(Integer expMin, UserRequestDto userInfo) {
+    private String createJws(Integer expMin, UserInfoDto userInfo) {
 
 
         //Header

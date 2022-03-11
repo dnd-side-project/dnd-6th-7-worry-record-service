@@ -1,47 +1,8 @@
 package dnd.project.dnd6th7worryrecordservice.dto.user;
 
-import dnd.project.dnd6th7worryrecordservice.domain.user.Role;
-import dnd.project.dnd6th7worryrecordservice.domain.user.SocialType;
-import dnd.project.dnd6th7worryrecordservice.domain.user.User;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Setter
 @Getter
-@ToString
-@NoArgsConstructor
 public class UserRequestDto {
-    private String username;
-    private String email;
-    private String socialId;
-    private String imgURL;
-    private String refreshToken;
-    private String deviceToken;
-    private SocialType socialType;
-
-    public UserRequestDto(String username, String email, String socialId, String imgURL, String refreshToken) {
-        this.username = username;
-        this.email = email;
-        this.socialId = socialId;
-        this.imgURL = imgURL;
-        this.refreshToken = refreshToken;
-    }
-
-
-    public UserRequestDto(String username, String email, String socialId, SocialType socialType, String imgURL) {
-        this.username = username;
-        this.email = email;
-        this.socialId = socialId;
-        this.socialType = socialType;
-        this.imgURL = imgURL;
-    }
-
-    //UserRequestDto를 User Entity로 변환하여 return
-    public User toEntity(){
-        User user = new User(this.username, this.email, this.socialId, Role.USER, this.imgURL, this.refreshToken, this.deviceToken, this.socialType);
-        return user;
-    }
 
 }
