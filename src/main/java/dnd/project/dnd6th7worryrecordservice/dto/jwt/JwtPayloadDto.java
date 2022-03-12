@@ -1,7 +1,7 @@
 package dnd.project.dnd6th7worryrecordservice.dto.jwt;
 
 import dnd.project.dnd6th7worryrecordservice.domain.user.SocialType;
-import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserInfoDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,8 +14,8 @@ public class JwtPayloadDto {
     private SocialType socialType;
     private String imgURL;
 
-    public UserRequestDto toUserRequestDto(){
-        UserRequestDto userRequestDto = new UserRequestDto(this.username, this.email, this.socialId, this.socialType, this.imgURL);
-        return userRequestDto;
+    public UserInfoDto toUserRequestDto(){
+        UserInfoDto userInfoDto = new UserInfoDto(this.username, this.email, this.socialId, this.socialType, this.imgURL);
+        return userInfoDto;
     }
 }
