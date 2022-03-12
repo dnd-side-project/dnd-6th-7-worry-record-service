@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dnd.project.dnd6th7worryrecordservice.domain.user.SocialType;
-import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
@@ -18,10 +18,10 @@ import java.net.URL;
 public class KakaoService {
 
     //AccessToken으로 UserInfo 받기
-    public UserRequestDto getUserInfo(String accessToken) {
+    public UserInfoDto getUserInfo(String accessToken) {
 
         //UserRequestDto에 정보 받기
-        UserRequestDto userInfo = new UserRequestDto();
+        UserInfoDto userInfo = new UserInfoDto();
 
         try {
             URL url = new URL("https://kapi.kakao.com/v2/user/me");

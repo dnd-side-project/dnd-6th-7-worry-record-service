@@ -43,7 +43,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             //When AccessToken is in HTTP header
             if (atJwtAccessToken != null && atJwtAccessToken.length() > 0) {
                 //validate AccessToken
-                if (jwtUtil.validate(atJwtAccessToken)) return true;
+                if (jwtUtil.validateToken(atJwtAccessToken)) return true;
                 else throw new IllegalArgumentException("Token Error!!!");
             }//When AccessToken isn't HTTP header
             else {
@@ -52,7 +52,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         }//When RefreshToken in HTTP header
         else{
             //validate RefreshToken
-            if(jwtUtil.validate(atJwtRefreshToken)){
+            if(jwtUtil.validateToken(atJwtRefreshToken)){
                 //Decode & Parse AccessToken to JwtPayloadDto
                 String accessTokenPayload = jwtUtil.decodePayload(atJwtAccessToken);
                 Gson gson = new Gson();
