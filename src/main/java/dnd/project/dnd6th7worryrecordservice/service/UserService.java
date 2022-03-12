@@ -62,5 +62,11 @@ public class UserService {
             throw new NullPointerException();
     }
 
+    public Optional<User> findSecurityUserBySocialData(String socialIdAndType) {
+        String[] socialData = socialIdAndType.split("@");
+        SocialType socialType = SocialType.valueOf(socialData[1]);
+        Optional<User> user = userRepository.findBySocialIdAndSocialType(socialData[0], socialType);
+        return user;
+    }
 
 }

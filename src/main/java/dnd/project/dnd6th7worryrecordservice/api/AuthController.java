@@ -11,6 +11,7 @@ import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import io.jsonwebtoken.lang.Assert;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,9 @@ import java.util.Optional;
 @RequestMapping("/auth")
 @RestController
 public class AuthController {
-    private final JwtUtil jwtUtil;
+
+    @Autowired
+    JwtUtil jwtUtil;
     private final KakaoService kakaoService;
     private final UserService userService;
     private final AppleService appleService;
