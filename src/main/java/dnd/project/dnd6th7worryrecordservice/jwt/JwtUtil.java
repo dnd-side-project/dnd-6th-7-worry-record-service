@@ -30,7 +30,7 @@ import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
 @Component
 public class JwtUtil {
 
-    private final int accessTokenExpMin = 1800;   //30min
+    private final int accessTokenExpMin = 36000;   //30min
     private final int refreshTokenExpMin = 604800;    //7day
     private final UserDetailsServiceImpl userDetailsService;
     private Date now = new Date();
