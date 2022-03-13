@@ -1,37 +1,53 @@
 package dnd.project.dnd6th7worryrecordservice.jwt;
 
-import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserInfoDto;
+import dnd.project.dnd6th7worryrecordservice.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.jsonwebtoken.SignatureAlgorithm.HS256;
-
-//import static org.springframework.security.config.Elements.JWT;
-//import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
+import static org.springframework.security.config.Elements.JWT;
+import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
 
 @Slf4j
-public class   JwtUtil {
-    private SecretKey key;
-    private Date now = new Date();
-    private int accessTokenExpMin = 1800;   //30min
-    private int refreshTokenExpMin = 604800;    //7day
+@RequiredArgsConstructor
+@Component
+public class JwtUtil {
 
-    public JwtUtil(String secret) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    private final int accessTokenExpMin = 1800;   //30min
+    private final int refreshTokenExpMin = 604800;    //7day
+    private final UserDetailsServiceImpl userDetailsService;
+    private Date now = new Date();
+
+    @Value("${jwt.secret}")
+    private String secret;
+
+    private SecretKey key;
+
+    @PostConstruct
+    protected void init() {
+        key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public TokenDto createToken(UserRequestDto userInfo) {
 
-        String accessToken = createJws(accessTokenExpMin, userInfo);
+    public TokenDto createToken(UserInfoDto userInfoDto) {
+        String accessToken = createJws(accessTokenExpMin, userInfoDto);
         String refreshToken = createJws(refreshTokenExpMin, null);
 
         TokenDto tokens = new TokenDto(accessToken, refreshToken);
@@ -39,51 +55,63 @@ public class   JwtUtil {
         return tokens;
     }
 
-    private String createJws(Integer expMin, UserRequestDto userInfo) {
+    private String createJws(Integer expMin, UserInfoDto userInfoDto) {
 
 
         //Header
-//        Map<String, Object> header = new HashMap<>();
-//        header.put("typ", JWT);
-//        header.put("alg", HS256);
+        Map<String, Object> header = new HashMap<>();
+        header.put("typ", JWT);
+        header.put("alg", HS256);
 
         //Body(Claims)
         Map<String, Object> claims = new HashMap<>();
         claims.put("iss", "worryrecord");
         claims.put("issueAt", now);
         claims.put("exp", new Date(System.currentTimeMillis() + 1000 * 60 * expMin));
-        if (userInfo != null) {
-            claims.put("socialId", userInfo.getSocialId());
-            claims.put("socialType", userInfo.getSocialType());
-            claims.put("username", userInfo.getUsername());
-            claims.put("email", userInfo.getEmail());
-            claims.put("imgURL", userInfo.getImgURL());
+        if (userInfoDto != null) {
+            claims.put("socialId", userInfoDto.getSocialId());
+            claims.put("socialType", userInfoDto.getSocialType().toString());
+            claims.put("username", userInfoDto.getUsername());
+            claims.put("email", userInfoDto.getEmail());
         }
 
         //Signiture
         String token = Jwts.builder()
 //                .setHeader(header)
                 .setClaims(claims)
-                .signWith(key, HS256)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         return token;
 
     }
 
-    public boolean validate(String token) {
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
 
-        Jws<Claims> jws;
+    public String resolveToken(HttpServletRequest req) {
+        return req.getHeader("at-jwt-access-token");
+    }
 
-        try {   //유효한 Token일 경우 decode된 내용을 출력
-            JwtParserBuilder jpb = Jwts.parserBuilder();
-            jpb.setSigningKey(key);
-            jws = jpb.build().parseClaimsJws(token);
+    // Jwt Token에서 SocialId/SocialType 추출
+    public String getUserPk(String token) {
+        String socialId = Jwts.parser().setSigningKey(key)
+                .parseClaimsJws(token).getBody().get("socialId").toString();
+        String socialType = Jwts.parser().setSigningKey(key)
+                .parseClaimsJws(token).getBody().get("socialType").toString();
 
-            System.out.println(jws);
-            System.out.println(jws.getBody().getSubject());
+        String value = socialId+"@"+socialType;
+        return value;
+    }
 
-            return true;
+    // Jwt Token의 유효성 및 만료 기간 검사
+    public boolean validateToken(String token) {
+
+        try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+            return !claims.getBody().getExpiration().before(new Date());
         } catch (SignatureException ex) {
             log.error("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
@@ -113,5 +141,4 @@ public class   JwtUtil {
         return decodedString;
 
     }
-
 }
