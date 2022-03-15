@@ -43,6 +43,9 @@ logging:
 jwt:
   secret: ${JWT_SECRET}
 
+app:
+  firebase-secret: ${FIREBASE_SECRET_KEY}
+
 cloud:
   aws:
     credentials:
@@ -55,3 +58,4 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+

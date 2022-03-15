@@ -43,11 +43,11 @@ public class WorryService {
                     meanlessWorryCnt++;
             }
 
-            String meanlessWorryPer;
+            short meanlessWorryPer;
             if (finishedWorryCnt == 0) {
-                meanlessWorryPer = "100%";
+                meanlessWorryPer = 100;
             } else {
-                meanlessWorryPer = Math.round((meanlessWorryCnt / finishedWorryCnt * 100)) + "%";
+                meanlessWorryPer = (short) Math.round((meanlessWorryCnt / finishedWorryCnt * 100));
             }
 
             int worryCnt = (int) (worryList.size() - finishedWorryCnt);
@@ -133,14 +133,14 @@ public class WorryService {
     }
 
     //걱정 보관함 - 지난 걱정
-    public List<WorryResponseDto> findWorryByIsFinished(boolean isFinished, Long userId) {
+    public List<WorryPastResponseDto> findWorryByIsFinished(boolean isFinished, Long userId) {
         Optional<User> user = userService.findUserByUserId(userId);
         if (isFinished == true && user.isPresent()) {
-            List<WorryResponseDto> worryDtoList = new ArrayList<>();
+            List<WorryPastResponseDto> worryDtoList = new ArrayList<>();
 
             List<Worry> worryList = worryRepository.findByIsFinishedAndUserOrderByWorryStartDateAsc(isFinished, user.get());
             for (Worry worry : worryList) {
-                WorryResponseDto responseDto = getWorryResponseDto(worry);
+                WorryPastResponseDto responseDto = getWorryPastResponseDto(worry);
                 worryDtoList.add(responseDto);
             }
             return worryDtoList;
@@ -151,7 +151,7 @@ public class WorryService {
 
 
     //걱정 보관함 - 지난 걱정 - 걱정 카테고리 필터링
-    public List<WorryResponseDto> findCategorizedPastWorry(Long userId, List<Long> categoryId) {
+    public List<WorryPastResponseDto> findCategorizedPastWorry(Long userId, List<Long> categoryId) {
 
         Optional<User> user = userService.findUserByUserId(userId);
         if (user.isPresent()) {
@@ -162,10 +162,10 @@ public class WorryService {
             }
 
             List<Worry> worryList = worryRepository.findByUserAndIsFinishedAndCategoryInOrderByWorryStartDateAsc(user.get(), true, categoryList);
-            List<WorryResponseDto> worryDtoList = new ArrayList<>();
+            List<WorryPastResponseDto> worryDtoList = new ArrayList<>();
 
             for (Worry worry : worryList) {
-                WorryResponseDto responseDto = getWorryResponseDto(worry);
+                WorryPastResponseDto responseDto = getWorryPastResponseDto(worry);
                 worryDtoList.add(responseDto);
             }
 
@@ -176,15 +176,15 @@ public class WorryService {
     }
 
     //걱정 보관함 - 지난 걱정 - 의미 있는 걱정/의미 없는 걱정
-    public List<WorryResponseDto> findMeanOrMeanlessWorry(Long userId, boolean isRealized) {
+    public List<WorryPastResponseDto> findMeanOrMeanlessWorry(Long userId, boolean isRealized) {
         Optional<User> user = userService.findUserByUserId(userId);
         if (user.isPresent()) {
 
             List<Worry> worryList = worryRepository.findByUserAndIsFinishedAndIsRealizedOrderByWorryStartDateAsc(user.get(), true, isRealized);
-            List<WorryResponseDto> worryDtoList = new ArrayList<>();
+            List<WorryPastResponseDto> worryDtoList = new ArrayList<>();
 
             for (Worry worry : worryList) {
-                WorryResponseDto responseDto = getWorryResponseDto(worry);
+                WorryPastResponseDto responseDto = getWorryPastResponseDto(worry);
                 worryDtoList.add(responseDto);
             }
 
@@ -204,9 +204,11 @@ public class WorryService {
     }
 
     //걱정 보관함 - 걱정 삭제
-    public void deleteWorry(Long worryId) {
-        Worry worry = worryRepository.findWorryByWorryId(worryId);
-        worryRepository.delete(worry);
+    public void deleteWorry(List<Long> worryIds) {
+        for (Long worryId : worryIds) {
+            Worry worry = worryRepository.findWorryByWorryId(worryId);
+            worryRepository.delete(worry);
+        }
     }
 
     //걱정 후기 채팅방 - 열기
@@ -216,6 +218,7 @@ public class WorryService {
                 .worryStartDate(worry.getWorryStartDate())
                 .categoryName(worry.getCategory().getCategoryName())
                 .worryText(worry.getWorryText())
+                .username(worry.getUser().getUsername())
                 .build();
 
         return worryChatResponseDto;
@@ -223,11 +226,13 @@ public class WorryService {
 
     //걱정 후기 채팅방 - 걱정 실현 여부 입력
     public WorryCntResponseDto worryChatSetRealized(Long userId, Long worryId, boolean isRealized) {
-        worryRepository.setIsRealized(worryId, isRealized);
-        worryRepository.setIsFinished(worryId, true);
         Optional<User> optionalUser = userService.findUserByUserId(userId);
 
         if (optionalUser.isPresent()) {
+            worryRepository.setIsRealized(worryId, isRealized);
+            worryRepository.setIsFinished(worryId, true);
+            Worry worry = worryRepository.findWorryByWorryId(worryId);
+
             User user = optionalUser.get();
             LocalDateTime time = LocalDateTime.now();
 
@@ -243,6 +248,9 @@ public class WorryService {
             WorryCntResponseDto worryCntResponseDto = WorryCntResponseDto.builder()
                     .worryCnt(worryList.size())
                     .meaningfulWorryCnt(realizedCnt)
+                    .username(user.getUsername())
+                    .categoryName(worry.getCategory().getCategoryName())
+                    .worryStartDate(worry.getWorryStartDate())
                     .build();
 
             return worryCntResponseDto;
@@ -308,8 +316,23 @@ public class WorryService {
 
     }
 
-    private String setCategoryName(Long userId, String cloudCnt){
-        if(cloudCnt == "_0" || cloudCnt == "_1" || cloudCnt == "_2" || cloudCnt == "_3")
+    private WorryPastResponseDto getWorryPastResponseDto(Worry worry) {
+        WorryPastResponseDto responseDto = WorryPastResponseDto.builder()
+                .worryId(worry.getWorryId())
+                .worryStartDate(worry.getWorryStartDate())
+                .worryExpiryDate(worry.getWorryExpiryDate())
+                .isRealized(worry.isRealized())
+                .isFinished(worry.isFinished())
+                .isLocked(worry.isLocked())
+                .category(worry.getCategory())
+                .worryReview(worry.getWorryReview())
+                .build();
+        return responseDto;
+
+    }
+
+    private String setCategoryName(Long userId, String cloudCnt) {
+        if (cloudCnt == "_0" || cloudCnt == "_1" || cloudCnt == "_2" || cloudCnt == "_3")
             return "기본";
         else {
             Optional<User> optionalUser = userService.findUserByUserId(userId);
@@ -321,18 +344,22 @@ public class WorryService {
         }
     }
 
+    public List<Worry> findWorryByUser(User user){
+        return worryRepository.findByUser(user);
+    }
+
     private String setCloudCnt(int worryCnt) {
-        if(worryCnt == 0){
+        if (worryCnt == 0) {
             return "_0";
-        }else if(worryCnt == 1){
+        } else if (worryCnt == 1) {
             return "_1";
-        }else if(worryCnt == 2){
+        } else if (worryCnt == 2) {
             return "_2";
-        }else if(worryCnt == 3){
+        } else if (worryCnt == 3) {
             return "_3";
-        }else if(worryCnt >= 4 && worryCnt <= 9){
+        } else if (worryCnt >= 4 && worryCnt <= 9) {
             return "_4";
-        }else
+        } else
             return "_5";
     }
 }

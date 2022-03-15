@@ -43,7 +43,7 @@ public class WorryController {
         try {
             WorryWriteResponseDto worryWriteResponseDto = worryService.addWorry(worryRequestDto);
             return ResponseEntity.ok(worryWriteResponseDto);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -93,9 +93,9 @@ public class WorryController {
             name = "userId"
             , value = "유저PK")
     @GetMapping("/past")
-    public ResponseEntity<List<WorryResponseDto>> allPastWorryList(@RequestParam("userId") Long userId) {
+    public ResponseEntity<List<WorryPastResponseDto>> allPastWorryList(@RequestParam("userId") Long userId) {
         try {
-            List<WorryResponseDto> worryList = worryService.findWorryByIsFinished(true, userId);
+            List<WorryPastResponseDto> worryList = worryService.findWorryByIsFinished(true, userId);
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
@@ -115,9 +115,9 @@ public class WorryController {
             )
     })
     @GetMapping("/past/filter")
-    public ResponseEntity<List<WorryResponseDto>> categorizedPastWorry(@RequestParam("userId") Long userId, @RequestParam("categories") List<Long> categoryId) {
+    public ResponseEntity<List<WorryPastResponseDto>> categorizedPastWorry(@RequestParam("userId") Long userId, @RequestParam("categories") List<Long> categoryId) {
         try {
-            List<WorryResponseDto> worryList = worryService.findCategorizedPastWorry(userId, categoryId);
+            List<WorryPastResponseDto> worryList = worryService.findCategorizedPastWorry(userId, categoryId);
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
@@ -131,9 +131,9 @@ public class WorryController {
             name = "userId"
             , value = "유저PK")
     @GetMapping("/past/mean")
-    public ResponseEntity<List<WorryResponseDto>> meaningfulWorry(@RequestParam("userId") Long userId) {
+    public ResponseEntity<List<WorryPastResponseDto>> meaningfulWorry(@RequestParam("userId") Long userId) {
         try {
-            List<WorryResponseDto> worryList = worryService.findMeanOrMeanlessWorry(userId, true);
+            List<WorryPastResponseDto> worryList = worryService.findMeanOrMeanlessWorry(userId, true);
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
@@ -147,9 +147,9 @@ public class WorryController {
             name = "userId"
             , value = "유저PK")
     @GetMapping("/past/meanless")
-    public ResponseEntity<List<WorryResponseDto>> meanlessWorry(@RequestParam("userId") Long userId) {
+    public ResponseEntity<List<WorryPastResponseDto>> meanlessWorry(@RequestParam("userId") Long userId) {
         try {
-            List<WorryResponseDto> worryList = worryService.findMeanOrMeanlessWorry(userId, false);
+            List<WorryPastResponseDto> worryList = worryService.findMeanOrMeanlessWorry(userId, false);
             Assert.notNull(worryList);
             return ResponseEntity.ok(worryList);
         } catch (Exception e) {
@@ -171,12 +171,12 @@ public class WorryController {
     //걱정 보관함 - 걱정 삭제
     @ApiOperation(value = "걱정 삭제", notes = "걱정 보관함의 걱정 삭제")
     @ApiImplicitParam(
-            name = "worryId"
-            , value = "걱정PK")
-    @DeleteMapping("/{worryId}")
-    public ResponseEntity removeWorry(@PathVariable Long worryId) {
+            name = "worryIds"
+            , value = "걱정PK 리스트")
+    @DeleteMapping
+    public ResponseEntity removeWorry(@RequestParam("worryIds") List<Long> worryIds) {
         try {
-            worryService.deleteWorry(worryId);
+            worryService.deleteWorry(worryIds);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -208,7 +208,7 @@ public class WorryController {
                     , value = "걱정 실현 여부")
     })
     @PostMapping("/chat/realize")
-    public ResponseEntity inputWorryIsRealized(@RequestParam("userId") Long userId, @RequestParam("worryId") Long worryId, @RequestParam("isRealized") boolean isRealized) {
+    public ResponseEntity<WorryCntResponseDto> inputWorryIsRealized(@RequestParam("userId") Long userId, @RequestParam("worryId") Long worryId, @RequestParam("isRealized") boolean isRealized) {
         try {
             WorryCntResponseDto worryCntResponseDto = worryService.worryChatSetRealized(userId, worryId, isRealized);
             Assert.notNull(worryCntResponseDto);
@@ -225,7 +225,8 @@ public class WorryController {
                     name = "worryId"
                     , value = "걱정PK"),
             @ApiImplicitParam(
-                    name = "expiryDate")
+                    name = "expiryDate"
+                    , value = "걱정 만료일")
     })
     @PutMapping("/review/date")
     public ResponseEntity changeWorryExpiryDate(@RequestParam("worryId") Long worryId, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @RequestParam("expiryDate") LocalDateTime expiryDate) {
@@ -275,8 +276,8 @@ public class WorryController {
         }
     }
 
-    //걱정 후기 수정 - 후기 내용 수정
-    @ApiOperation(value = "걱정 후기 수정 - 내용 수정", notes = "후기 내용 수정")
+    //걱정 후기 입력/수정 - 내용
+    @ApiOperation(value = "걱정 후기 입력/수정 - 내용", notes = "후기 내용 입력 OR 수정")
     @PatchMapping("/review")
     public ResponseEntity modifyWorryReview(@RequestBody WorryReviewModifyRequestDto worryRequestDto) {
         try {
