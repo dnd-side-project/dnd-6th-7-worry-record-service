@@ -37,12 +37,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .httpBasic().disable()
-                .csrf().disable();
-
-        http
+                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/ping").permitAll()
                 .antMatchers("/auth/**").permitAll() // /auth/**에 대한 접근을 인증 절차 없이 허용(로그인 관련 url)
+                .antMatchers("/").permitAll() //메인 화면 접근 가능
+                .antMatchers("/worries/**").hasAnyRole("USER","ADMIN")
                 .anyRequest().authenticated() // 위에서 따로 지정한 접근허용 리소스 설정 후 그 외 나머지 리소스들은 무조건 인증을 완료해야 접근 가능
                 .and()
                 .sessionManagement()    //스프링 시큐리티 session 정책
@@ -51,5 +51,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
     }
-
 }
