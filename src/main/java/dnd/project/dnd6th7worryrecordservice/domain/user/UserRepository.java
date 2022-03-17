@@ -19,7 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findBySocialIdAndSocialType(String socialId, SocialType socialType);
 
-    //update 부분 jpa 변경감지로 변환
     @Modifying(clearAutomatically = true)
     @Query("UPDATE User u SET u.username = ?1, u.email = ?2, u.imgUrl = ?3, u.refreshToken = ?4, u.deviceToken = ?5 WHERE u.socialId = ?6 AND u.socialType = ?7")
     void updateUserBySocialIdAndSocialType(String username, String email, String imgURL, String refreshToken, String deviceToken, String socialId, SocialType socialType);
@@ -30,6 +29,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE User u SET u.deviceToken = ?1 WHERE u.userId = ?2")
     void updateDeviceTokenByUserId(String deviceToken, Long userId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE User u SET u.refreshToken = ?1 WHERE u.socialId = ?2 AND u.socialType = ?3")
+    void updateRefreshTokenBySocialIdAndSocialType(String refreshToken, String socialId, SocialType socialType);
 
     void delete(User user);
 
