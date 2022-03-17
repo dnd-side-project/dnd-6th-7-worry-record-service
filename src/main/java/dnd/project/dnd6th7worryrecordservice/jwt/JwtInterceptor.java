@@ -2,6 +2,7 @@ package dnd.project.dnd6th7worryrecordservice.jwt;
 
 import com.google.gson.Gson;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.JwtPayloadDto;
+import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,8 @@ public class JwtInterceptor implements HandlerInterceptor {
                 if (jwtUtil.validateToken(atJwtAccessToken)) return true;
                 else throw new IllegalArgumentException("Token Error!!!");
             }//When AccessToken isn't HTTP header
-            else {
+            else
                 throw new IllegalArgumentException("No Token!!!");
-            }
         }//When RefreshToken in HTTP header
         else{
             //validate RefreshToken
@@ -63,17 +63,18 @@ public class JwtInterceptor implements HandlerInterceptor {
 
                 if(refreshTokenInDB.equals(atJwtRefreshToken)){
                     //Create new AccessToken and addHeader
-                    String AccessJws = jwtUtil.createToken(jwtPayload.toUserRequestDto()).getJwtAccessToken();
-                    response.addHeader("at-jwt-access-token", AccessJws);
-                }else {
+                    TokenDto jwtToken = jwtUtil.createToken(jwtPayload.toUserRequestDto());
+                    String jwtRefreshToken = jwtToken.getJwtRefreshToken();
+                    String jwtAccessToken = jwtToken.getJwtAccessToken();
+
+                    userService.updateRefreshTokenBySocialData(jwtRefreshToken, jwtPayload.getSocialId(), jwtPayload.getSocialType());
+                    response.addHeader("at-jwt-access-token", jwtAccessToken);
+                    response.addHeader("at-jwt-refresh-token", jwtRefreshToken);
+                }else
                     throw new IllegalArgumentException("Refresh Token Error!!!");
-                }
-
                 return true;
-
-            }else {
+            }else
                 throw new IllegalArgumentException("Refresh Token Error!!!");
-            }
         }
 
     }
