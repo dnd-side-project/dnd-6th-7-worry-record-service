@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
 @Component
 public class JwtUtil {
 
-    private final int accessTokenExpMin = 36000;   //30min
+    private final int accessTokenExpMin = 3600;   //30min
     private final int refreshTokenExpMin = 604800;    //7day
     private final UserDetailsServiceImpl userDetailsService;
     private Date now = new Date();
@@ -102,7 +103,7 @@ public class JwtUtil {
         String socialType = Jwts.parser().setSigningKey(key)
                 .parseClaimsJws(token).getBody().get("socialType").toString();
 
-        String value = socialId+"@"+socialType;
+        String value = socialId + "@" + socialType;
         return value;
     }
 

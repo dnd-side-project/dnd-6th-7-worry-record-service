@@ -62,6 +62,10 @@ public class UserService {
             throw new NullPointerException();
     }
 
+    public void updateRefreshTokenBySocialData(String refreshToken, String socialId, SocialType socialType){
+        userRepository.updateRefreshTokenBySocialIdAndSocialType(refreshToken, socialId, socialType);
+    }
+
     public Optional<User> findSecurityUserBySocialData(String socialIdAndType) {
         String[] socialData = socialIdAndType.split("@");
         SocialType socialType = SocialType.valueOf(socialData[1]);
