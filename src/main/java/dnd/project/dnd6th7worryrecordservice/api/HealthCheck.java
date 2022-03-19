@@ -5,6 +5,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HealthCheck {
+    @GetMapping("/")
+    public String index() {
+        return "ok";
+    }
+
     @GetMapping("/ping")
     public String healthCheck() {
         return "pong";
