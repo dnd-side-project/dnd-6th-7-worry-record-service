@@ -1,6 +1,5 @@
 package dnd.project.dnd6th7worryrecordservice.security.filter;
 
-import com.google.api.client.util.Value;
 import dnd.project.dnd6th7worryrecordservice.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -14,7 +13,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
