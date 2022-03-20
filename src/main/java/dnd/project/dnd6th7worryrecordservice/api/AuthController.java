@@ -36,11 +36,11 @@ public class AuthController {
     public ResponseEntity<UserResponseDto> kakaoLogin(@RequestHeader("oauthToken") String accessToken, @RequestHeader("deviceToken") String deviceToken, HttpServletResponse res) {
         System.out.println("accessToken = " + accessToken);
 
-        // OAuth2 Token으로 유저정보 받아오기
-        UserInfoDto userInfo = kakaoService.getUserInfo(accessToken);
-        userInfo.setDeviceToken(deviceToken);   //userInfo에 deviceToken 추가
-
         try {
+            // OAuth2 Token으로 유저정보 받아오기
+            UserInfoDto userInfo = kakaoService.getUserInfo(accessToken);
+            userInfo.setDeviceToken(deviceToken);   //userInfo에 deviceToken 추가
+
             //UserInfo NullCheck
             Assert.notNull(userInfo.getSocialId());
 
@@ -60,7 +60,7 @@ public class AuthController {
 
             return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
         } catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity("Request Value Error", HttpStatus.NOT_FOUND);
         }
     }
 
