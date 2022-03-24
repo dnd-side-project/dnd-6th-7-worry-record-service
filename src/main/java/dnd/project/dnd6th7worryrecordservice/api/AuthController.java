@@ -9,7 +9,7 @@ import dnd.project.dnd6th7worryrecordservice.service.AppleService;
 import dnd.project.dnd6th7worryrecordservice.service.KakaoService;
 import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import io.jsonwebtoken.lang.Assert;
-import io.swagger.annotations.*;
+//import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class AuthController {
     private final UserService userService;
     private final AppleService appleService;
 
-    @ApiOperation(value = "KAKAO OAuth2 로그인", notes = "카카오 계정으로 로그인 후 ResponseHeader로 JWT AccessToken, RefreshToken 을 발급한다")
+//    @ApiOperation(value = "KAKAO OAuth2 로그인", notes = "카카오 계정으로 로그인 후 ResponseHeader로 JWT AccessToken, RefreshToken 을 발급한다")
     @PostMapping(value = "/kakao")
     //Token값 헤더로 받도록 변경 필요
     public ResponseEntity<UserResponseDto> kakaoLogin(@RequestHeader("oauthToken") String accessToken, @RequestHeader("deviceToken") String deviceToken, HttpServletResponse res) {
@@ -64,7 +64,7 @@ public class AuthController {
         }
     }
 
-    @ApiOperation(value = "APPLE OAuth2 로그인", notes = "애플 계정으로 로그인 후 ResponseHeader로 JWT AccessToken, RefreshToken 을 발급한다")
+//    @ApiOperation(value = "APPLE OAuth2 로그인", notes = "애플 계정으로 로그인 후 ResponseHeader로 JWT AccessToken, RefreshToken 을 발급한다")
     @PostMapping(value = "/apple")
     //Token값 헤더로 받도록 변경 필요
     public ResponseEntity<UserResponseDto> appleLogin(@RequestHeader("oauthToken") String identityToken, @RequestHeader("deviceToken") String deviceToken, HttpServletResponse res) {
@@ -98,7 +98,7 @@ public class AuthController {
         }
     }
 
-    @ApiOperation(value = "FCM서버 디바이스 토큰 갱신", notes = "새로 발급된 DeviceToken을 DB에 저장한다")
+  /*  @ApiOperation(value = "FCM서버 디바이스 토큰 갱신", notes = "새로 발급된 DeviceToken을 DB에 저장한다")
     @ApiImplicitParams({
             @ApiImplicitParam(
                     name = "userId"
@@ -106,7 +106,7 @@ public class AuthController {
             @ApiImplicitParam(
                     name = "deviceToken"
                     , value = "FCM서버에서 전송 받는 푸쉬알림을 위한 토큰")
-    })
+    })*/
     @PutMapping(value = "/refresh")
     public ResponseEntity<?> refreshDeviceToken(@RequestParam("userId") Long userId, @RequestParam("deviceToken") String deviceToken) {
         try {
