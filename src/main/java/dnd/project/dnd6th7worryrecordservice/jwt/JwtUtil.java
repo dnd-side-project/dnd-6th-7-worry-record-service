@@ -2,15 +2,15 @@ package dnd.project.dnd6th7worryrecordservice.jwt;
 
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import dnd.project.dnd6th7worryrecordservice.dto.user.UserInfoDto;
-//import dnd.project.dnd6th7worryrecordservice.security.UserDetailsServiceImpl;
+import dnd.project.dnd6th7worryrecordservice.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -23,8 +23,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-//import static org.springframework.security.config.Elements.JWT;
-//import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
+import static org.springframework.security.config.Elements.JWT;
+import static org.springframework.security.oauth2.jose.jws.JwsAlgorithms.HS256;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,7 +33,7 @@ public class JwtUtil {
 
     private final int accessTokenExpMin = 3600;   //30min
     private final int refreshTokenExpMin = 604800;    //7day
-//    private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
     private Date now = new Date();
 
     @Value("${jwt.secret}")
@@ -60,9 +60,9 @@ public class JwtUtil {
 
 
         //Header
-//        Map<String, Object> header = new HashMap<>();
-//        header.put("typ", JWT);
-//        header.put("alg", HS256);
+        Map<String, Object> header = new HashMap<>();
+        header.put("typ", JWT);
+        header.put("alg", HS256);
 
         //Body(Claims)
         Map<String, Object> claims = new HashMap<>();
@@ -87,10 +87,10 @@ public class JwtUtil {
 
     }
 
-//    public Authentication getAuthentication(String token) {
-//        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
-//        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-//    }
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
 
     public String resolveToken(HttpServletRequest req) {
         return req.getHeader("at-jwt-access-token");
