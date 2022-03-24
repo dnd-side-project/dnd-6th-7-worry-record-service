@@ -64,39 +64,39 @@ public class AuthController {
         }
     }
 
-    @ApiOperation(value = "APPLE OAuth2 로그인", notes = "애플 계정으로 로그인 후 ResponseHeader로 JWT AccessToken, RefreshToken 을 발급한다")
-    @PostMapping(value = "/apple")
-    //Token값 헤더로 받도록 변경 필요
-    public ResponseEntity<UserResponseDto> appleLogin(@RequestHeader("oauthToken") String identityToken, @RequestHeader("deviceToken") String deviceToken, HttpServletResponse res) {
-        System.out.println("identityToken = " + identityToken);
-
-        // OAuth2 Token으로 유저정보 받아오기
-        UserInfoDto userInfo = appleService.getUserInfo(identityToken);
-        userInfo.setDeviceToken(deviceToken);   //userInfo에 deviceToken 추가
-
-        try {
-            //UserInfo NullCheck
-            Assert.notNull(userInfo.getSocialId());
-
-            TokenDto tokens = jwtUtil.createToken(userInfo);
-            userInfo.setRefreshToken(tokens.getJwtRefreshToken());
-
-            //socialId 기준으로 DB select하여 User 데이터가 없으면 Insert, 있으면 Update
-            userService.insertOrUpdateUser(userInfo);
-
-            Optional<User> userBySocialData = userService.findUserBySocialData(userInfo.getSocialId(), userInfo.getSocialType());
-
-            //UserResponseDto에 userId 추가
-            UserResponseDto userResponseDto = new UserResponseDto(userBySocialData.get().getUserId(), userInfo.getUsername(), userInfo.getEmail(), userInfo.getImgURL());
-
-            res.addHeader("at-jwt-access-token", tokens.getJwtAccessToken());
-            res.addHeader("at-jwt-refresh-token", tokens.getJwtRefreshToken());
-
-            return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
-        } catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-    }
+//    @ApiOperation(value = "APPLE OAuth2 로그인", notes = "애플 계정으로 로그인 후 ResponseHeader로 JWT AccessToken, RefreshToken 을 발급한다")
+//    @PostMapping(value = "/apple")
+//    //Token값 헤더로 받도록 변경 필요
+//    public ResponseEntity<UserResponseDto> appleLogin(@RequestHeader("oauthToken") String identityToken, @RequestHeader("deviceToken") String deviceToken, HttpServletResponse res) {
+//        System.out.println("identityToken = " + identityToken);
+//
+//        // OAuth2 Token으로 유저정보 받아오기
+//        UserInfoDto userInfo = appleService.getUserInfo(identityToken);
+//        userInfo.setDeviceToken(deviceToken);   //userInfo에 deviceToken 추가
+//
+//        try {
+//            //UserInfo NullCheck
+//            Assert.notNull(userInfo.getSocialId());
+//
+//            TokenDto tokens = jwtUtil.createToken(userInfo);
+//            userInfo.setRefreshToken(tokens.getJwtRefreshToken());
+//
+//            //socialId 기준으로 DB select하여 User 데이터가 없으면 Insert, 있으면 Update
+//            userService.insertOrUpdateUser(userInfo);
+//
+//            Optional<User> userBySocialData = userService.findUserBySocialData(userInfo.getSocialId(), userInfo.getSocialType());
+//
+//            //UserResponseDto에 userId 추가
+//            UserResponseDto userResponseDto = new UserResponseDto(userBySocialData.get().getUserId(), userInfo.getUsername(), userInfo.getEmail(), userInfo.getImgURL());
+//
+//            res.addHeader("at-jwt-access-token", tokens.getJwtAccessToken());
+//            res.addHeader("at-jwt-refresh-token", tokens.getJwtRefreshToken());
+//
+//            return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+//        } catch (Exception e){
+//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//        }
+//    }
 
     @ApiOperation(value = "FCM서버 디바이스 토큰 갱신", notes = "새로 발급된 DeviceToken을 DB에 저장한다")
     @ApiImplicitParams({
