@@ -8,15 +8,16 @@ import dnd.project.dnd6th7worryrecordservice.domain.worry.WorryRepository;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.request.WorryRequestDto;
 import dnd.project.dnd6th7worryrecordservice.dto.worry.response.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -145,6 +146,7 @@ public class WorryService {
             }
             return worryDtoList;
         } else {
+            log.error("is Finished is not true And user.isPresent is {}",user.isPresent());
             return null;
         }
     }
@@ -171,6 +173,7 @@ public class WorryService {
 
             return worryDtoList;
         } else {
+            log.error("user.isPresent is {}",user.isPresent());
             return null;
         }
     }
@@ -190,6 +193,7 @@ public class WorryService {
 
             return worryDtoList;
         } else {
+            log.error("user.isPresent is {}",user.isPresent());
             return null;
         }
     }
@@ -266,7 +270,7 @@ public class WorryService {
             worryRepository.changeExpiryDate(worryId, worryExpiryDate);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+           log.error("{}", e.getMessage());
             return false;
         }
 
@@ -283,10 +287,12 @@ public class WorryService {
                     .categoryName(worry.getCategory().getCategoryName())
                     .worryText(worry.getWorryText())
                     .worryReview(worry.getWorryReview())
+                    .isRealized(worry.isRealized())
                     .build();
 
             return worryDto;
         } else {
+            log.error("worry.isLocked is {}",worry.isLocked());
             return null;
         }
     }
