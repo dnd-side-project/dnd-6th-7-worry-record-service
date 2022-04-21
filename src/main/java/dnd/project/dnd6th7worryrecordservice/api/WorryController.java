@@ -245,14 +245,14 @@ public class WorryController {
             name = "worryId"
             , value = "걱정PK")
     @GetMapping("/review/{worryId}")
-    public ResponseEntity<WorryReviewResponseDto> callWorryReview(@PathVariable Long worryId) {
+    public ResponseEntity<?> callWorryReview(@PathVariable Long worryId) {
         try {
             WorryReviewResponseDto worryReviewResponseDto = worryService.checkIsLockedAndCallReview(worryId);
             Assert.notNull(worryReviewResponseDto);
 
             return ResponseEntity.ok(worryReviewResponseDto);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("worry.isLocked is true",HttpStatus.BAD_REQUEST);
         }
     }
 

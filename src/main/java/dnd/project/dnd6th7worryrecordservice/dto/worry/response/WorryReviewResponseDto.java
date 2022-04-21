@@ -16,4 +16,5 @@ public class WorryReviewResponseDto {
     private String categoryName;
     private String worryText;
     private String worryReview;
+    private boolean isRealized;
 }
