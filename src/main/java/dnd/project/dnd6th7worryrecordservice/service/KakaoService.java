@@ -3,7 +3,8 @@ package dnd.project.dnd6th7worryrecordservice.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dnd.project.dnd6th7worryrecordservice.dto.user.UserRequestDto;
+import dnd.project.dnd6th7worryrecordservice.domain.user.SocialType;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
@@ -17,10 +18,10 @@ import java.net.URL;
 public class KakaoService {
 
     //AccessToken으로 UserInfo 받기
-    public UserRequestDto getUserInfo(String access_Token) {
+    public UserInfoDto getUserInfo(String accessToken) {
 
         //UserRequestDto에 정보 받기
-        UserRequestDto userInfo = new UserRequestDto();
+        UserInfoDto userInfo = new UserInfoDto();
 
         try {
             URL url = new URL("https://kapi.kakao.com/v2/user/me");
@@ -28,7 +29,7 @@ public class KakaoService {
             conn.setRequestMethod("POST");
 
             //    요청에 필요한 Header에 포함될 내용
-            conn.setRequestProperty("Authorization", "Bearer " + access_Token);
+            conn.setRequestProperty("Authorization", "Bearer " + accessToken);
 
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
@@ -55,10 +56,12 @@ public class KakaoService {
             String email = kakao_account.getAsJsonObject().get("email").getAsString();
 
             //    UserRequestDto에 값 주입
+            System.out.println("nickname = " + nickname);
             userInfo.setUsername(nickname);
-            userInfo.setKakaoId(kakaoId);
+            userInfo.setSocialId(kakaoId);
             userInfo.setEmail(email);
             userInfo.setImgURL(imgURL);
+            userInfo.setSocialType(SocialType.KAKAO);
 
 
         } catch (IOException e) {   // 잘못된 값 주입하고 에러 터지는 지 Test

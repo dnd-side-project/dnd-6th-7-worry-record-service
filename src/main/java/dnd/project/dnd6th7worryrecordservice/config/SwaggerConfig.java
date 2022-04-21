@@ -17,9 +17,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig implements WebMvcConfigurer {
-    private static final String API_NAME = "WorryRecordService API";
-    private static final String API_VERSION = "0.0.1";
-    private static final String API_DESCRIPTION = "WorryRecordService API 명세서";
+    private static final String API_NAME = "Heurit API";
+    private static final String API_VERSION = "1.0.0";
+    private static final String API_DESCRIPTION = "Heurit API 명세서";
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class TokenDto {
-
     private String jwtAccessToken;
     private String jwtRefreshToken;
 }
