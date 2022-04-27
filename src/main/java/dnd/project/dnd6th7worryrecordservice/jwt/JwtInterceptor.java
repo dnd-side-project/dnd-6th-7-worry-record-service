@@ -5,11 +5,14 @@ import dnd.project.dnd6th7worryrecordservice.dto.jwt.JwtPayloadDto;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
 import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtInterceptor implements HandlerInterceptor {
     private final UserService userService;
@@ -45,14 +48,19 @@ public class JwtInterceptor implements HandlerInterceptor {
             if (atJwtAccessToken != null && atJwtAccessToken.length() > 0) {
                 //validate AccessToken
                 if (jwtUtil.validateToken(atJwtAccessToken)) return true;
-                else throw new IllegalArgumentException("Token Error!!!");
+                else {
+                    log.error("Jwt AccessToken validate error!");
+                    throw new IllegalArgumentException("Jwt AccessToken validate Error!");
+                }
             }//When AccessToken isn't HTTP header
-            else
-                throw new IllegalArgumentException("No Token!!!");
+            else {
+                log.error("Jwt AccessToken is empty!");
+                throw new IllegalArgumentException("No Jwt AccessToken!");
+            }
         }//When RefreshToken in HTTP header
-        else{
+        else {
             //validate RefreshToken
-            if(jwtUtil.validateToken(atJwtRefreshToken)){
+            if (jwtUtil.validateToken(atJwtRefreshToken)) {
                 //Decode & Parse AccessToken to JwtPayloadDto
                 String accessTokenPayload = jwtUtil.decodePayload(atJwtAccessToken);
                 Gson gson = new Gson();
@@ -61,7 +69,7 @@ public class JwtInterceptor implements HandlerInterceptor {
                 //Compare RefreshToken in DB with RefreshToken in HTTP header
                 String refreshTokenInDB = userService.findRefreshTokenBySocialData(jwtPayload.getSocialId(), jwtPayload.getSocialType());
 
-                if(refreshTokenInDB.equals(atJwtRefreshToken)){
+                if (refreshTokenInDB.equals(atJwtRefreshToken)) {
                     //Create new AccessToken and addHeader
                     TokenDto jwtToken = jwtUtil.createToken(jwtPayload.toUserRequestDto());
                     String jwtRefreshToken = jwtToken.getJwtRefreshToken();
@@ -70,11 +78,15 @@ public class JwtInterceptor implements HandlerInterceptor {
                     userService.updateRefreshTokenBySocialData(jwtRefreshToken, jwtPayload.getSocialId(), jwtPayload.getSocialType());
                     response.addHeader("at-jwt-access-token", jwtAccessToken);
                     response.addHeader("at-jwt-refresh-token", jwtRefreshToken);
-                }else
-                    throw new IllegalArgumentException("Refresh Token Error!!!");
+                } else {
+                    log.error("Jwt RefreshToken error!");
+                    throw new IllegalArgumentException("RefreshToken Error!");
+                }
                 return true;
-            }else
+            } else {
+                log.error("Jwt token error!");
                 throw new IllegalArgumentException("Refresh Token Error!!!");
+            }
         }
 
     }
