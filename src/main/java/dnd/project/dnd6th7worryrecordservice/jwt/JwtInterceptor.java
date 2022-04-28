@@ -1,8 +1,11 @@
 package dnd.project.dnd6th7worryrecordservice.jwt;
 
+import com.google.firebase.auth.UserInfo;
 import com.google.gson.Gson;
+import dnd.project.dnd6th7worryrecordservice.domain.user.User;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.JwtPayloadDto;
 import dnd.project.dnd6th7worryrecordservice.dto.jwt.TokenDto;
+import dnd.project.dnd6th7worryrecordservice.dto.user.UserInfoDto;
 import dnd.project.dnd6th7worryrecordservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +14,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -62,7 +66,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             //validate RefreshToken
             if (jwtUtil.validateToken(atJwtRefreshToken)) {
                 //Decode & Parse AccessToken to JwtPayloadDto
-                String accessTokenPayload = jwtUtil.decodePayload(atJwtAccessToken);
+                String accessTokenPayload = jwtUtil.decodePayload(atJwtRefreshToken);
                 Gson gson = new Gson();
                 JwtPayloadDto jwtPayload = gson.fromJson(accessTokenPayload, JwtPayloadDto.class);
 
@@ -71,7 +75,10 @@ public class JwtInterceptor implements HandlerInterceptor {
 
                 if (refreshTokenInDB.equals(atJwtRefreshToken)) {
                     //Create new AccessToken and addHeader
-                    TokenDto jwtToken = jwtUtil.createToken(jwtPayload.toUserRequestDto());
+
+                    UserInfoDto userInfoDto = getUserInfoDto(jwtPayload);   //findUser by socialId And socialType
+
+                    TokenDto jwtToken = jwtUtil.createToken(userInfoDto);
                     String jwtRefreshToken = jwtToken.getJwtRefreshToken();
                     String jwtAccessToken = jwtToken.getJwtAccessToken();
 
@@ -89,5 +96,11 @@ public class JwtInterceptor implements HandlerInterceptor {
             }
         }
 
+    }
+
+    private UserInfoDto getUserInfoDto(JwtPayloadDto jwtPayload) {
+        User userBySocialData = userService.findUserBySocialData(jwtPayload.getSocialId(), jwtPayload.getSocialType()).get();
+        UserInfoDto userInfoDto = new UserInfoDto(userBySocialData.getUsername(), userBySocialData.getEmail(), userBySocialData.getSocialId(), userBySocialData.getSocialType().toString());
+        return userInfoDto;
     }
 }

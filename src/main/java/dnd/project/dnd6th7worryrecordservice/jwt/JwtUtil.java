@@ -17,7 +17,6 @@ import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,15 +48,22 @@ public class JwtUtil {
 
     public TokenDto createToken(UserInfoDto userInfoDto) {
         String accessToken = createJws(accessTokenExpMin, userInfoDto);
-        String refreshToken = createJws(refreshTokenExpMin, null);
+        String refreshToken = createJws(refreshTokenExpMin, getRefreshUserInfoDto(userInfoDto));
 
         TokenDto tokens = new TokenDto(accessToken, refreshToken);
 
         return tokens;
     }
+    
+    //refreshToken 생성에 필요한 userInfoDto 생성
+    private UserInfoDto getRefreshUserInfoDto(UserInfoDto userInfoDto) {
+        UserInfoDto refreshTokenUserInfoDto = new UserInfoDto();
+        refreshTokenUserInfoDto.setSocialType(userInfoDto.getSocialType());
+        refreshTokenUserInfoDto.setSocialId(userInfoDto.getSocialId());
+        return refreshTokenUserInfoDto;
+    }
 
     private String createJws(Integer expMin, UserInfoDto userInfoDto) {
-
 
         //Header
         Map<String, Object> header = new HashMap<>();
@@ -78,7 +84,7 @@ public class JwtUtil {
 
         //Signiture
         String token = Jwts.builder()
-//                .setHeader(header)
+                .setHeader(header)
                 .setClaims(claims)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();

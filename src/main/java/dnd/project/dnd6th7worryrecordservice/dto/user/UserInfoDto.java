@@ -21,7 +21,7 @@ public class UserInfoDto {
     private String deviceToken;
     private SocialType socialType;
 
-    public UserInfoDto(String username, String email, String socialId, String imgURL, String refreshToken) {
+    public UserInfoDto(String username, String email, String socialId, String refreshToken) {
         this.username = username;
         this.email = email;
         this.socialId = socialId;

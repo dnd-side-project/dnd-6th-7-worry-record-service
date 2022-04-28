@@ -8,14 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class JwtPayloadDto {
-    private String username;
-    private String email;
     private String socialId;
     private SocialType socialType;
-    private String imgURL;
-
-    public UserInfoDto toUserRequestDto(){
-        UserInfoDto userInfoDto = new UserInfoDto(this.username, this.email, this.socialId, this.socialType, this.imgURL);
-        return userInfoDto;
-    }
 }
