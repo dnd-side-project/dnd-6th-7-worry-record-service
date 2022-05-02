@@ -107,7 +107,7 @@ public class AuthController {
                     , value = "FCM서버에서 전송 받는 푸쉬알림을 위한 토큰")
     })
     @PutMapping(value = "/refresh") //프론트에서 JWT at/rt 함께 보내 두 토큰 모두 refresh 하도록 설계
-    public ResponseEntity<?> refreshDeviceToken(@RequestParam("userId") Long userId, @RequestParam("deviceToken") String deviceToken) {
+    public ResponseEntity<?> refreshDeviceToken(@RequestParam("userId") Long userId, @RequestHeader("deviceToken") String deviceToken) {
         try {
             userService.updateDeviceToken(deviceToken, userId);
             return new ResponseEntity<>(HttpStatus.OK);
