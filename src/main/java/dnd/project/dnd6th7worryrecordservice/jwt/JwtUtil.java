@@ -48,7 +48,7 @@ public class JwtUtil {
 
     public TokenDto createToken(UserInfoDto userInfoDto) {
         String accessToken = createJws(accessTokenExpMin, userInfoDto);
-        String refreshToken = createJws(refreshTokenExpMin, getRefreshUserInfoDto(userInfoDto));
+        String refreshToken = createJws(refreshTokenExpMin, null);
 
         TokenDto tokens = new TokenDto(accessToken, refreshToken);
 
@@ -56,12 +56,7 @@ public class JwtUtil {
     }
     
     //refreshToken 생성에 필요한 userInfoDto 생성
-    private UserInfoDto getRefreshUserInfoDto(UserInfoDto userInfoDto) {
-        UserInfoDto refreshTokenUserInfoDto = new UserInfoDto();
-        refreshTokenUserInfoDto.setSocialType(userInfoDto.getSocialType());
-        refreshTokenUserInfoDto.setSocialId(userInfoDto.getSocialId());
-        return refreshTokenUserInfoDto;
-    }
+
 
     private String createJws(Integer expMin, UserInfoDto userInfoDto) {
 
