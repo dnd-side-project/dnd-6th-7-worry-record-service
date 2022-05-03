@@ -7,6 +7,7 @@ import dnd.project.dnd6th7worryrecordservice.service.WorryService;
 import io.jsonwebtoken.lang.Assert;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/worries")
 @RestController
@@ -28,10 +30,12 @@ public class WorryController {
             , value = "유저PK")
     @GetMapping("/home")
     public ResponseEntity<WorryHomeResponseDto> home(@RequestParam("userId") Long userId) {
+        WorryHomeResponseDto worryHomeResponseDto;
         try {
-            WorryHomeResponseDto worryHomeResponseDto = worryService.home(userId);
+            Assert.notNull(worryHomeResponseDto = worryService.home(userId));
             return ResponseEntity.ok(worryHomeResponseDto);
         } catch (Exception e) {
+            log.error("UserId"+userId+" not found!");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -245,14 +249,14 @@ public class WorryController {
             name = "worryId"
             , value = "걱정PK")
     @GetMapping("/review/{worryId}")
-    public ResponseEntity<WorryReviewResponseDto> callWorryReview(@PathVariable Long worryId) {
+    public ResponseEntity<?> callWorryReview(@PathVariable Long worryId) {
         try {
             WorryReviewResponseDto worryReviewResponseDto = worryService.checkIsLockedAndCallReview(worryId);
             Assert.notNull(worryReviewResponseDto);
 
             return ResponseEntity.ok(worryReviewResponseDto);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("worry.isLocked is true",HttpStatus.BAD_REQUEST);
         }
     }
 

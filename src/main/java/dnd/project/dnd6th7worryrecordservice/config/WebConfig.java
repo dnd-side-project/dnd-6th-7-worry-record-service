@@ -17,7 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         System.out.println("####### Register Interceptor: JwtInterceptor!!!");
-        registry.addInterceptor(jwtInterceptor()).addPathPatterns("/worries/**");   //토큰을 검증할 path
+        registry.addInterceptor(jwtInterceptor()).addPathPatterns("/worries/**").addPathPatterns("/auth/refresh");   //토큰을 검증할 path
     }
 
     @Override

@@ -32,7 +32,6 @@ public class AuthController {
 
     @ApiOperation(value = "KAKAO OAuth2 로그인", notes = "카카오 계정으로 로그인 후 ResponseHeader로 JWT AccessToken, RefreshToken 을 발급한다")
     @PostMapping(value = "/kakao")
-    //Token값 헤더로 받도록 변경 필요
     public ResponseEntity<UserResponseDto> kakaoLogin(@RequestHeader("oauthToken") String accessToken, @RequestHeader("deviceToken") String deviceToken, HttpServletResponse res) {
         System.out.println("accessToken = " + accessToken);
 
@@ -107,8 +106,8 @@ public class AuthController {
                     name = "deviceToken"
                     , value = "FCM서버에서 전송 받는 푸쉬알림을 위한 토큰")
     })
-    @PutMapping(value = "/refresh")
-    public ResponseEntity<?> refreshDeviceToken(@RequestParam("userId") Long userId, @RequestParam("deviceToken") String deviceToken) {
+    @PutMapping(value = "/refresh") //프론트에서 JWT at/rt 함께 보내 두 토큰 모두 refresh 하도록 설계
+    public ResponseEntity<?> refreshDeviceToken(@RequestParam("userId") Long userId, @RequestHeader("deviceToken") String deviceToken) {
         try {
             userService.updateDeviceToken(deviceToken, userId);
             return new ResponseEntity<>(HttpStatus.OK);
