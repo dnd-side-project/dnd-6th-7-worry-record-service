@@ -52,19 +52,15 @@ public class JwtInterceptor implements HandlerInterceptor {
             if (atJwtAccessToken != null && atJwtAccessToken.length() > 0) {
                 //validate AccessToken
                 if (jwtUtil.validateToken(atJwtAccessToken)) return true;
-                else {
-                    log.error("Jwt AccessToken validate error!");
-                    throw new IllegalArgumentException("Jwt AccessToken validate Error!");
-                }
+                else throw new IllegalArgumentException("Token Error!!!");
             }//When AccessToken isn't HTTP header
             else {
-                log.error("Jwt AccessToken is empty!");
-                throw new IllegalArgumentException("No Jwt AccessToken!");
+                throw new IllegalArgumentException("No Token!!!");
             }
         }//When RefreshToken in HTTP header
-        else {
+        else{
             //validate RefreshToken
-            if (jwtUtil.validateToken(atJwtRefreshToken)) {
+            if(jwtUtil.validateToken(atJwtRefreshToken)){
                 //Decode & Parse AccessToken to JwtPayloadDto
                 String accessTokenPayload = jwtUtil.decodePayload(atJwtAccessToken);
                 Gson gson = new Gson();
@@ -73,22 +69,21 @@ public class JwtInterceptor implements HandlerInterceptor {
                 //Compare RefreshToken in DB with RefreshToken in HTTP header
                 String refreshTokenInDB = userService.findRefreshTokenBySocialData(jwtPayload.getSocialId(), jwtPayload.getSocialType());
 
-                if (refreshTokenInDB.equals(atJwtRefreshToken)) {
+                if(refreshTokenInDB.equals(atJwtRefreshToken)){
                     //Create new AccessToken and addHeader
-                    TokenDto jwtToken = jwtUtil.createToken(jwtPayload.toUserRequestDto());
-                    String jwtRefreshToken = jwtToken.getJwtRefreshToken();
-                    String jwtAccessToken = jwtToken.getJwtAccessToken();
+                    TokenDto token = jwtUtil.createToken(jwtPayload.toUserRequestDto());
+                    userService.updateRefreshTokenBySocialData(token.getJwtRefreshToken(), jwtPayload.getSocialId(), jwtPayload.getSocialType()); //update refreshToken in DB
+                    response.addHeader("at-jwt-access-token", token.getJwtAccessToken());
+                    response.addHeader("at-jwt-refresh-token", token.getJwtRefreshToken());
 
-                    userService.updateRefreshTokenBySocialData(jwtRefreshToken, jwtPayload.getSocialId(), jwtPayload.getSocialType());
-                    response.addHeader("at-jwt-access-token", jwtAccessToken);
-                    response.addHeader("at-jwt-refresh-token", jwtRefreshToken);
-                } else {
-                    log.error("Jwt RefreshToken error!");
-                    throw new IllegalArgumentException("RefreshToken Error!");
+                }else {
+                    log.error("Refresh Token not equals in DB!!!");
+                    throw new IllegalArgumentException("Refresh Token Error!!!");
                 }
                 return true;
-            } else {
-                log.error("Jwt token error!");
+
+            }else {
+                log.error("Refresh Token is not validate!!!");
                 throw new IllegalArgumentException("Refresh Token Error!!!");
             }
         }
