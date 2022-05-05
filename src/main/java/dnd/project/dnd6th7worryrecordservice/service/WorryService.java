@@ -61,7 +61,8 @@ public class WorryService {
             WorryHomeResponseDto worryResponseDto = new WorryHomeResponseDto(meanlessWorryPer, (short) worryCnt, imgUrl);
             return worryResponseDto;
         } else
-            return null;
+            log.error("Error :: UserId \"{}\" is not Present",userId);
+        return null;
     }
 
     //걱정 작성
@@ -86,7 +87,8 @@ public class WorryService {
 
             return worryWriteResponseDto;
         } else
-            return null;
+            log.error("Error :: UserId \"{}\" in RequestDto is not present!!!",worryRequestDto.getWorryText());
+        return null;
     }
 
     //걱정 보관함 - 요즘 걱정
@@ -105,6 +107,7 @@ public class WorryService {
             }
             return worryDtoList;
         } else {
+            log.error("Error :: UserId \"{}\" is not Present",userId);
             return null;
         }
     }
@@ -129,6 +132,7 @@ public class WorryService {
             }
             return worryDtoList;
         } else {
+            log.error("Error :: UserId \"{}\" is not Present",userId);
             return null;
         }
     }
@@ -146,7 +150,7 @@ public class WorryService {
             }
             return worryDtoList;
         } else {
-            log.error("is Finished is not true And user.isPresent is {}",user.isPresent());
+            log.error("Error :: isFinished is not \"True\" And UserId \"{}\" is not Present",userId);
             return null;
         }
     }
@@ -173,7 +177,7 @@ public class WorryService {
 
             return worryDtoList;
         } else {
-            log.error("user.isPresent is {}",user.isPresent());
+            log.error("Error :: UserId \"{}\" is not Present",userId);
             return null;
         }
     }
@@ -193,7 +197,7 @@ public class WorryService {
 
             return worryDtoList;
         } else {
-            log.error("user.isPresent is {}",user.isPresent());
+            log.error("Error :: UserId \"{}\" is not Present",userId);
             return null;
         }
     }
@@ -270,7 +274,7 @@ public class WorryService {
             worryRepository.changeExpiryDate(worryId, worryExpiryDate);
             return true;
         } catch (Exception e) {
-           log.error("{}", e.getMessage());
+            log.error("Error :: {}", e.getMessage());
             return false;
         }
 
@@ -292,7 +296,7 @@ public class WorryService {
 
             return worryDto;
         } else {
-            log.error("worry.isLocked is {}",worry.isLocked());
+            log.error("Error :: worry.isLocked is \"{}\"",worry.isLocked());
             return null;
         }
     }
@@ -346,7 +350,8 @@ public class WorryService {
                 List<Worry> worry = worryRepository.findCategory(optionalUser.get());
                 return worry.get(0).getCategory().getCategoryName();
             } else
-                return null;
+                log.error("Error :: UserId \"{}\" is not Present",userId);
+            return null;
         }
     }
 
