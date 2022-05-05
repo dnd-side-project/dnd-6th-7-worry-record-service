@@ -35,7 +35,6 @@ public class WorryController {
             Assert.notNull(worryHomeResponseDto = worryService.home(userId));
             return ResponseEntity.ok(worryHomeResponseDto);
         } catch (Exception e) {
-            log.error("UserId"+userId+" not found!");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
