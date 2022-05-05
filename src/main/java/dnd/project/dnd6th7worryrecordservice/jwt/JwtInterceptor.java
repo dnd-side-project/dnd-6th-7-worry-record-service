@@ -77,12 +77,13 @@ public class JwtInterceptor implements HandlerInterceptor {
                     response.addHeader("at-jwt-refresh-token", token.getJwtRefreshToken());
 
                 }else {
+                    log.error("Refresh Token not equals in DB!!!");
                     throw new IllegalArgumentException("Refresh Token Error!!!");
                 }
-
                 return true;
 
             }else {
+                log.error("Refresh Token is not validate!!!");
                 throw new IllegalArgumentException("Refresh Token Error!!!");
             }
         }
