@@ -11,6 +11,8 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+import static javax.persistence.FetchType.*;
+
 @Getter
 @NoArgsConstructor
 @Table(name = "WORRY")
@@ -21,11 +23,11 @@ public class Worry {
     @GeneratedValue
     private Long worryId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "categoryId", nullable = false)
     private Category category;
 
