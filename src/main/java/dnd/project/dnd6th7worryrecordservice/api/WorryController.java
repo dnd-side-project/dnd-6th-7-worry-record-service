@@ -49,7 +49,6 @@ public class WorryController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
     //걱정 보관함 - 요즘 걱정
