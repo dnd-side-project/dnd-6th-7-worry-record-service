@@ -272,6 +272,7 @@ public class WorryService {
         try {
             Worry worry = worryRepository.findWorryByWorryId(worryId);
             worryRepository.changeExpiryDate(worryId, worryExpiryDate);
+            worryRepository.setIsFinished(worryId, false);
             return true;
         } catch (Exception e) {
             log.error("Error :: {}", e.getMessage());
