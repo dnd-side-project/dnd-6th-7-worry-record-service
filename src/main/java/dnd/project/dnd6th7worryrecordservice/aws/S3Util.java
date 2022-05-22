@@ -24,8 +24,8 @@ public class S3Util {
     private String bucket;
 
     public String downloadFile(String fileName){
-        String fileUrl = "homeGIF/" + fileName + ".gif";
-        return amazonS3Client.getUrl(bucket, fileUrl).toString();
+        String fileUrl = bucket + "/homeGIF/" + fileName + ".gif";
+        return amazonS3Client.getUrl("",fileUrl).toString();
     }
 
     public String uploadFile(MultipartFile multipartFile, String dirName) {
