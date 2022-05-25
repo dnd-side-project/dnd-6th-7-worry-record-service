@@ -11,6 +11,8 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+import static javax.persistence.FetchType.*;
+
 @Getter
 @NoArgsConstructor
 @Table(name = "WORRY")
@@ -21,11 +23,11 @@ public class Worry {
     @GeneratedValue
     private Long worryId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "categoryId", nullable = false)
     private Category category;
 
@@ -40,7 +42,7 @@ public class Worry {
     private boolean isRealized;
 
     @Column(name = "isLocked")
-    private boolean isLocked = true;
+    private boolean isLocked;
 
     @Column(name = "worryStartDate", nullable = false)
     private LocalDateTime worryStartDate;
@@ -52,11 +54,12 @@ public class Worry {
     private String worryReview;
 
     @Builder
-    public Worry(User user, Category category, String worryText, LocalDateTime worryStartDate, LocalDateTime worryExpiryDate) {
+    public Worry(User user, Category category, String worryText, LocalDateTime worryStartDate, LocalDateTime worryExpiryDate, boolean isLocked) {
         this.user = user;
         this.category = category;
         this.worryText = worryText;
         this.worryStartDate = worryStartDate;
         this.worryExpiryDate = worryExpiryDate;
+        this.isLocked = isLocked;
     }
 }

@@ -76,6 +76,7 @@ public class WorryService {
                     .worryText(worryRequestDto.getWorryText())
                     .worryStartDate(time)
                     .worryExpiryDate(worryRequestDto.getWorryExpiryDate())
+                    .isLocked(worryRequestDto.isLocked())
                     .build();
 
             worryRepository.save(worry);
