@@ -37,6 +37,16 @@ public class UserInfoDto {
         this.socialType = socialType;
         this.imgURL = imgURL;
     }
+    //테스트용
+    public UserInfoDto(String username, String email, String socialId, SocialType socialType, String imgURL,String refreshToken, String diviceToken) {
+        this.username = username;
+        this.email = email;
+        this.socialId = socialId;
+        this.socialType = socialType;
+        this.imgURL = imgURL;
+        this.refreshToken = refreshToken;
+        this.deviceToken = diviceToken;
+    }
 
     //UserRequestDto를 User Entity로 변환하여 return
     public User toEntity(){
