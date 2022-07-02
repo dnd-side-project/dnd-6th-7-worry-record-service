@@ -41,9 +41,12 @@ class UserServiceTest {
     //DB에서 테스트 유저 삭제
     @AfterEach
     public void userAfterSetting(){
-        userService.deleteUserBySocialData("T_socialId1",SocialType.KAKAO);
-        userService.deleteUserBySocialData("T_socialId2",SocialType.APPLE);
-        userService.deleteUserBySocialData("T_socialId3",SocialType.KAKAO);
+        if(userService.findUserBySocialData("T_socialId1",SocialType.KAKAO).isPresent());
+            userService.deleteUserBySocialData("T_socialId1",SocialType.KAKAO);
+        if(userService.findUserBySocialData("T_socialId2",SocialType.APPLE).isPresent());
+            userService.deleteUserBySocialData("T_socialId2",SocialType.APPLE);
+        if(userService.findUserBySocialData("T_socialId3",SocialType.KAKAO).isPresent());
+            userService.deleteUserBySocialData("T_socialId3",SocialType.KAKAO);
     }
 
     @Test
@@ -124,11 +127,13 @@ class UserServiceTest {
     @Test
     @DisplayName("소셜데이터로 유저 데이터 삭제 TEST")
     void deleteUserBySocialData() {
-        userService.deleteUserBySocialData("T_socialId1", SocialType.KAKAO);
+        UserInfoDto user = new UserInfoDto("T_User4","T_email4","T_socialId4",SocialType.KAKAO,"T_imgUrl4","T_refreshToken4","T_deviceToken4");
+        userService.insertOrUpdateUser(user);
 
         System.out.println("================== 검증 ==================");
-        Optional<User> findUser = userService.findUserBySocialData("T_socialId1", SocialType.KAKAO);
-        Assertions.assertThat(findUser.isPresent()).isFalse();
+        userService.deleteUserBySocialData(user.getSocialId(), user.getSocialType());
+        Assertions.assertThat(userService.findUserBySocialData(user.getSocialId(),user.getSocialType()).isPresent()).isFalse();
+
     }
 
     @Test
